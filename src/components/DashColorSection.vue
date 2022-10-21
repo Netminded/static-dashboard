@@ -9,12 +9,15 @@
   const { backgroundOption, customBackgroundOption } = storeToRefs(optionsStore)
   const { updateBackgroundOption } = optionsStore
 
+  // If the background color exists in the local store update the value
   const setBkColor = () => {
       return customBackgroundOption.value.length !== 0 ? customBackgroundOption.value : '#8A4AF3'
   }
 
+  //Initialse the color to either a default or what is in the store for persistence on refresh
   const customColor = ref(setBkColor())
 
+  // Set the active background color status
   const showActive = (bkColor: BkColours, color: BkColours) => {
     return bkColor === color
   }

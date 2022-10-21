@@ -28,6 +28,7 @@ const router = createRouter({
   ],
 })
 
+// If not signed in re-direct to login 
 router.beforeEach(async(to, from, next) => {
   const requiresAuth = to.matched.some(val => val.meta.requiresAuth)
   const isLoggedIn = await authedUser()

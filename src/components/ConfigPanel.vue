@@ -15,6 +15,7 @@
     const { depsList } = storeToRefs(depsStore)
     const { addNewDep, onSort, resetDeps } = depsStore
 
+    // Sortable values
     const sortableInstance = ref({
         animation: 150,
         easing: "cubic-bezier(1, 0, 0, 1)",

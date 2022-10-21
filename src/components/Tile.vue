@@ -12,6 +12,7 @@
         statusColor: DepStatusColors
     }>()
 
+    // Get the relevant status color header class
     const setHeaderColor = (col: DepStatusColors) => {
 
         const colors = new Map([
@@ -25,6 +26,7 @@
         return headerClass
     }
 
+    // Limit the length that the dependency title or status message can be
     const truncateTxt = (text: string, maxChars: number) =>
         text.length > maxChars ? text.substring(0, maxChars) + "…" : text;
 </script>

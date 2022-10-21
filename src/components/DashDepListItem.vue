@@ -12,6 +12,7 @@ DepStatusColors<script setup lang="ts">
       index: number
     }>()
 
+    // If the dependency values exist in the local store update the value
     const isInArray = (index: number) => {
       return typeof depsList.value[index] !== undefined ? true : false
     }
@@ -32,19 +33,23 @@ DepStatusColors<script setup lang="ts">
       return isInArray(index) ? depsList.value[index].expanded : true
     }
 
+    //Initialse the dependency values to either a default or what is in the store for persistence on refresh
     const title = ref(setTitle(props.index))
     const statusMsg = ref(setStatusMsg(props.index))
     const statusColor = ref(setStatusColor(props.index))
     const expanded = ref(setExpanded(props.index))
 
+    // Update the dependency status color 
     const updateStatusColor = (color: DepStatusColors) => {
         statusColor.value = color
     }
 
+    // Set the active status color status
     const showActive = (statusColor: DepStatusColors, color: DepStatusColors) => {
       return statusColor === color
     }
 
+    // Check id a dependency item has been saved
     const isAdded = (index: number) => {
       return depItem.value(index).added
     }

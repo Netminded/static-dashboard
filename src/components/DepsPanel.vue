@@ -18,6 +18,7 @@
     const tileEls = ref([])
     const arrowEls = ref([])
 
+    // Get the background class for the dependencies panel
     const setBkColor = (col: BkColours) => {
 
         const colors = new Map([
@@ -31,6 +32,7 @@
         return bkClass
     }
 
+    // Show a dependency arrow if there is more than one dependency and the when the dependency is not the last
     const showArrow = (index: number) => {
         if (addedDepsList.value.length > 1 && index !== addedDepsList.value.length - 1) { 
             return true
@@ -38,6 +40,7 @@
         return false
     }
 
+    // Create a screen capture of the dependencies panel and save it as a PNG with the current time and date
     const captureScreen = async () => {
         let timestamp = new Date()
         tileSizes()
@@ -51,6 +54,7 @@
         })
     }
 
+    // Calculate how tall the sreen capture needs to be based on size or dependency tiles and arrows
     const tileSizes = () => {
         let total = 40
         if(tileEls) {

@@ -8,6 +8,7 @@
   const router = useRouter()
   const { setLogOut } = usersStore
 
+  // Sign a user out and re-direct to login
   const signOut = async () => {
         await setLogOut()
         router.push('/login')

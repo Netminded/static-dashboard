@@ -30,7 +30,7 @@ library.add(
   faRotateLeft,
   faHand,
   faTrashCan
-);
+)
 
 import "./assets/main.css"
 
