@@ -1,6 +1,6 @@
 # Static Dashboard App
 
-This project uses Vue 3, Vue Router and Pinia for the local store, TypeScript and Firebase for authentication. 
+This project uses Vue 3, Vite, Vue Router and Pinia for the local store, TypeScript and Firebase for authentication. 
 
 ## Recommended IDE Setup
 
