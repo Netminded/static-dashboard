@@ -1,6 +1,6 @@
-# static-deps-creator
+# Static Dashboard App
 
-This template should help get you started developing with Vue 3 in Vite.
+This project uses Vue 3, Vue Router and Pinia for the local store, TypeScript and Firebase for authentication. 
 
 ## Recommended IDE Setup
 
@@ -26,6 +26,16 @@ See [Vite Configuration Reference](https://vitejs.dev/config/).
 ```sh
 npm install
 ```
+Create a `.env` file in the root of the project directory. Add the following env variables with the values from the dashboard project Firebase config. These should be added as string values. 
+
+```sh
+VITE_FB_API_KEY=""
+VITE_FB_AUTH_DOMAIN=""
+VITE_FB_PROJECT_ID=""
+VITE_FB_STORAGE_BUCKET=""
+VITE_FB_MESSAGE_SENDER_ID=""
+VITE_FB_APP_ID=""
+```
 
 ### Compile and Hot-Reload for Development
 
@@ -37,6 +47,25 @@ npm run dev
 
 ```sh
 npm run build
+```
+
+### Check the Production Build Locally
+
+```sh
+npm run preview
+```
+
+### Build and Deploy
+SSH should be configured on your GitHub account to deploy the dashboard to GitHub pages. The `dist` build directory will be deployed to the branch `gh-pages`. As SSH is used for deployment commits this can also be used for pushing commits to other branches too e.g `git push git@github.com:Netminded/static-dashboard.git main`. 
+
+```sh
+sh deploy.sh
+```
+
+or 
+
+```sh
+./deploy.sh
 ```
 
 ### Lint with [ESLint](https://eslint.org/)
