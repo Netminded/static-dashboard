@@ -184,6 +184,6 @@
 
     .screenshot-btn .fa-camera-retro {
         position: relative;
-        top: 2px;
+        top: 4px;
     }
 </style>

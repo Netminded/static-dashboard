@@ -53,7 +53,7 @@ DepStatusColors<script setup lang="ts">
 <template>
   <div class="dep-list-item">
     <div class="dep-list-item-header">
-      <h6><font-awesome-icon icon="fa-solid fa-grip-lines" />{{ title }}</h6>
+      <h6 class="dep-header-handle"><font-awesome-icon icon="fa-solid fa-grip-lines" />{{ title }}</h6>
       <div class="dep-list-item-actions">
         <span>
           <font-awesome-icon v-if="expanded" icon="fa-solid fa-chevron-up" @click="expanded = !expanded" /> 
@@ -116,7 +116,6 @@ DepStatusColors<script setup lang="ts">
 }
 .dep-list-item-header {
   display: flex;
-  justify-content: space-between;
   cursor: move;
 }
 
@@ -129,14 +128,17 @@ h6 {
   font-family: "Poppins";
   font-weight: 800;
   font-size: 14px;
+  flex-grow: 1;
 }
 
 .dep-list-item-header .dep-list-item-actions span:first-child {
+  color: #4c4d55;
   padding: 20px 10px;
   cursor: pointer;
 }
 
 .dep-list-item-header .dep-list-item-actions span:last-child {
+  color: #4c4d55;
   padding: 20px 0 20px 10px;
   cursor: pointer;
 }

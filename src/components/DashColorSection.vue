@@ -123,6 +123,11 @@
     padding: 0; 
   }
 
+  input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 100%;
+  }
+
   .bk-color-container input::-webkit-color-swatch, .bk-color-container input::-moz-color-swatch {
     border: none;
     border-radius: 100%;

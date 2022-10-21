@@ -18,7 +18,7 @@
     const sortableInstance = ref({
         animation: 150,
         easing: "cubic-bezier(1, 0, 0, 1)",
-        handle: ".dep-list-item-header",
+        handle: ".dep-header-handle",
         ghostClass: 'ghost'
     })
 </script>
@@ -69,6 +69,7 @@
 
     .deps-config .fa-hand {
         margin-right: 5px;
+        transform: rotate(15deg);
     }
 
     .deps-config .dashboard-greeting {
