@@ -2,8 +2,12 @@ DepStatusColors<script setup lang="ts">
     import { ref } from "vue"
     import { DepStatusColors } from "@/types"
     import { storeToRefs } from 'pinia'
+    import { useOptionsStore } from '@/stores/options'
     import { useDepsStore } from '@/stores/deps'
+    import { isInArray } from "@/utilities/utils"
 
+    const optionsStore = useOptionsStore()
+    const { toggleSupportMsg } = storeToRefs(optionsStore)
     const depsStore = useDepsStore()
     const { depsList, depItem } = storeToRefs(depsStore)
     const { updateDep, removeDep } = depsStore
@@ -12,25 +16,36 @@ DepStatusColors<script setup lang="ts">
       index: number
     }>()
 
-    // If the dependency values exist in the local store update the value
-    const isInArray = (index: number) => {
-      return typeof depsList.value[index] !== undefined ? true : false
+    const defaultSupportMsgs = {
+      [DepStatusColors.Red]: '',
+      [DepStatusColors.Amber]: '',
+      [DepStatusColors.Green]: '',
+      [DepStatusColors.Default]: ''
     }
 
+    // If the dependency values exist in the local store update the value
+    // const isInArray = (index: number) => {
+    //   return typeof depsList.value[index] !== undefined ? true : false
+    // }
+
     const setTitle = (index: number) => {
-      return isInArray(index) ? depsList.value[index].title : ""
+      return isInArray(index, depsList.value) ? depsList.value[index].title : ""
     }
 
     const setStatusMsg = (index: number) => {
-      return isInArray(index) ? depsList.value[index].statusMsg : ""
+      return isInArray(index, depsList.value) ? depsList.value[index].statusMsg : ""
     }
 
     const setStatusColor = (index: number) => {
-      return isInArray(index) ? depsList.value[index].statusColor : DepStatusColors.Green
+      return isInArray(index, depsList.value) ? depsList.value[index].statusColor : DepStatusColors.Green
     }
 
     const setExpanded = (index: number) => {
-      return isInArray(index) ? depsList.value[index].expanded : true
+      return isInArray(index, depsList.value) ? depsList.value[index].expanded : true
+    }
+
+    const setSupportMsgs = (index: number) => {
+      return isInArray(index, depsList.value) ? depsList.value[index].supportMsgs : defaultSupportMsgs
     }
 
     //Initialse the dependency values to either a default or what is in the store for persistence on refresh
@@ -38,6 +53,7 @@ DepStatusColors<script setup lang="ts">
     const statusMsg = ref(setStatusMsg(props.index))
     const statusColor = ref(setStatusColor(props.index))
     const expanded = ref(setExpanded(props.index))
+    const supportMsgs = ref(setSupportMsgs(props.index))
 
     // Update the dependency status color 
     const updateStatusColor = (color: DepStatusColors) => {
@@ -87,19 +103,18 @@ DepStatusColors<script setup lang="ts">
         </div>
       </div>
       <input type="text" placeholder="Title" required v-model="title" />
-      <input
-        name="depStatusMsg"
-        type="text"
-        placeholder="Status Message"
-        required
-        v-model="statusMsg"
-      />
+      <input name="depStatusMsg" type="text" placeholder="Status Message" required v-model="statusMsg" />
       <p>{{ 60 - statusMsg.length }}/60 Characters Remaining</p>
+      <div v-if="toggleSupportMsg">
+        <input type="text" placeholder="Red Status Support Message" v-model="supportMsgs[DepStatusColors.Green]" />
+        <input type="text" placeholder="Amber Status Support Message" v-model="supportMsgs[DepStatusColors.Amber]" />
+        <input type="text" placeholder="Green Status Support Message" v-model="supportMsgs[DepStatusColors.Red]" />
+      </div>
       <button
         type="button"
         class="btn"
         :disabled="statusMsg.length <= 0 || statusMsg.length > 60 || title.length <= 0"
-        @click="expanded = !expanded, updateDep(index, title, statusMsg, statusColor, true, expanded)"
+        @click="expanded = !expanded, updateDep(index, title, statusMsg, statusColor, true, expanded, supportMsgs, false)"
       >
         {{ isAdded(index) ? 'Update' : 'Add'}}
       </button>

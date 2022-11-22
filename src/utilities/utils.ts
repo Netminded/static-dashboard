@@ -1,3 +1,5 @@
+import type { Dep } from '@/types'
+
 const validateEmail = (email: string | null) => { 
     if(email) {
         const emailParts = email.split('@')
@@ -43,4 +45,8 @@ const adjustColor = (color:string, percent: number) => {
     return "#"+RR+GG+BB
 }
 
-export { validateEmail, getFirstName, adjustColor }
+const isInArray = (index: number, array: Dep[]) => {
+    return typeof array[index] !== undefined ? true : false
+}
+
+export { validateEmail, getFirstName, adjustColor, isInArray }

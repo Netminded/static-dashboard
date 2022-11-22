@@ -3,6 +3,7 @@
     import { Sortable } from "sortablejs-vue3"
     import DashColorSection from "../components/DashColorSection.vue"
     import DashThemeSection from "../components/DashThemeSection.vue"
+    import SupportMsgToggleSectionVue from "./SupportMsgToggleSection.vue"
     import DashDepListItem from "../components/DashDepListItem.vue"
     import { storeToRefs } from 'pinia'
     import { useDepsStore } from '@/stores/deps'
@@ -30,6 +31,7 @@
         <hr />
         <DashColorSection />
         <DashThemeSection />
+        <SupportMsgToggleSectionVue />
         <Sortable :class="depsList.length >= 1 && 'deps-list'" :list="depsList" item-key="id" :options="sortableInstance" @sort="(event) => onSort(event)">
             <template #item="{element, index}">
                 <div class="draggable" :key="element.id">

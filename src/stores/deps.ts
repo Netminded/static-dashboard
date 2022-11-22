@@ -2,15 +2,8 @@ import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { v4 as uuidv4 } from 'uuid'
 import { DepStatusColors } from "@/types"
+import type { Dep, SupportMsgs } from "@/types"
 
-interface Dep {
-    id: string,
-    title: string,
-    statusMsg: string,
-    statusColor: DepStatusColors,
-    added: boolean,
-    expanded: boolean
-}
 
 export const useDepsStore = defineStore("deps", () => {
 
@@ -21,6 +14,13 @@ export const useDepsStore = defineStore("deps", () => {
         statusColor: DepStatusColors.Green,
         added: false,
         expanded: true,
+        supportMsgs: {
+            [DepStatusColors.Red]: '',
+            [DepStatusColors.Amber]: '',
+            [DepStatusColors.Green]: '',
+            [DepStatusColors.Default]: '',
+        },
+        supportExpanded: false,
     }
 
     const depsList = ref<Dep[]>([])
@@ -39,8 +39,21 @@ export const useDepsStore = defineStore("deps", () => {
     }
 
     // Merge the dependency id with updated values to edit the dependency
-    const updateDep = (index: number, title: string, statusMsg: string, statusColor: DepStatusColors, added: boolean, expanded: boolean) => {
-        depsList.value[index] = {...depsList.value[index], title, statusMsg, statusColor, added, expanded}
+    const updateDep = (
+        index: number, 
+        title: string, 
+        statusMsg: string, 
+        statusColor: DepStatusColors, 
+        added: boolean, 
+        expanded: boolean, 
+        supportMsgs: SupportMsgs, 
+        supportExpanded: boolean) => {
+        depsList.value[index] = {...depsList.value[index], title, statusMsg, statusColor, added, expanded, supportMsgs, supportExpanded}
+    }
+
+    const updateDepSupportExpanded = (id: string, supportExpanded: boolean) => {
+        const item = depsList.value.findIndex((dep) => dep.id === id)
+        depsList.value[item] = {...depsList.value[item], supportExpanded }
     }
 
     // Remove a dependency from the array
@@ -58,5 +71,5 @@ export const useDepsStore = defineStore("deps", () => {
         depsList.value = []
     }
 
-    return { depsList, depItem, addedDepsList, addNewDep, updateDep, removeDep, onSort, resetDeps}
+    return { depsList, depItem, addedDepsList, addNewDep, updateDep, updateDepSupportExpanded, removeDep, onSort, resetDeps}
 })
