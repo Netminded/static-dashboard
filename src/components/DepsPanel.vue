@@ -76,7 +76,7 @@
         </div>
         <template v-for="(dep, index) in addedDepsList" :key="index">
             <template v-if="dep.added">
-                <Tile ref="tileEls" :id="dep.id" :title="dep.title" :statusMsg="dep.statusMsg" :statusColor="dep.statusColor" :supportMsgs="dep.supportMsgs" />
+                <Tile ref="tileEls" :id="dep.id" :title="dep.title" :statusMsg="dep.statusMsg" :statusColor="dep.statusColor" :supportMsg="dep.supportMsgs[dep.statusColor]" />
                 <div ref="arrowEls" v-if="showArrow(index)" class="deps-arrow" :class="themeOption === Themes.NetMinded ? 'deps-arrow-netminded' : 'deps-arrow-pti'">
                     <font-awesome-icon icon="fa-solid fa-arrow-down" />
                 </div>

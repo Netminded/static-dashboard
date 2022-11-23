@@ -54,6 +54,9 @@ DepStatusColors<script setup lang="ts">
     const statusColor = ref(setStatusColor(props.index))
     const expanded = ref(setExpanded(props.index))
     const supportMsgs = ref(setSupportMsgs(props.index))
+    const supportMsgRed = ref(supportMsgs.value.Red)
+    const supportMsgAmber = ref(supportMsgs.value.Amber)
+    const supportMsgGreen = ref(supportMsgs.value.Green)
 
     // Update the dependency status color 
     const updateStatusColor = (color: DepStatusColors) => {
@@ -68,6 +71,15 @@ DepStatusColors<script setup lang="ts">
     // Check id a dependency item has been saved
     const isAdded = (index: number) => {
       return depItem.value(index).added
+    }
+
+    const updateSupport = (red: string, amber: string, green: string) => {
+      supportMsgs.value = {
+        Red: red,
+        Amber: amber,
+        Green: green,
+        Grey: ''
+      }
     }
 </script>
 
@@ -105,19 +117,21 @@ DepStatusColors<script setup lang="ts">
       <input type="text" placeholder="Title" required v-model="title" />
       <input name="depStatusMsg" type="text" placeholder="Status Message" required v-model="statusMsg" />
       <p>{{ 60 - statusMsg.length }}/60 Characters Remaining</p>
-      <div v-if="toggleSupportMsg">
-        <input type="text" placeholder="Red Status Support Message" v-model="supportMsgs[DepStatusColors.Green]" />
-        <input type="text" placeholder="Amber Status Support Message" v-model="supportMsgs[DepStatusColors.Amber]" />
-        <input type="text" placeholder="Green Status Support Message" v-model="supportMsgs[DepStatusColors.Red]" />
+      <div class="support-msg-input-container" v-if="toggleSupportMsg">
+        <textarea row="1" type="text" placeholder="Green Status Support Message" v-model="supportMsgGreen"></textarea>
+        <textarea row="1" type="text" placeholder="Amber Status Support Message" v-model="supportMsgAmber"></textarea>
+        <textarea row="1" type="text" placeholder="Red Status Support Message" v-model="supportMsgRed"></textarea>
       </div>
-      <button
+      <div class="btn-container">
+        <button
         type="button"
         class="btn"
         :disabled="statusMsg.length <= 0 || statusMsg.length > 60 || title.length <= 0"
-        @click="expanded = !expanded, updateDep(index, title, statusMsg, statusColor, true, expanded, supportMsgs, false)"
-      >
+        @click="expanded = !expanded, updateSupport(supportMsgRed, supportMsgAmber, supportMsgGreen), updateDep(index, title, statusMsg, statusColor, true, expanded, supportMsgs, false)"
+        >
         {{ isAdded(index) ? 'Update' : 'Add'}}
       </button>
+      </div>
     </div>
   </div>
 </template>
@@ -163,7 +177,7 @@ h6 {
   cursor: pointer;
 }
 
-.dep-list-item-body input {
+.dep-list-item-body input, .dep-list-item-body textarea {
   background: transparent;
   border: transparent;
   border-bottom: 3px solid #1b1a4b;
@@ -175,12 +189,12 @@ h6 {
   width: 100%;
 }
 
-.dep-list-item-body input:focus {
+.dep-list-item-body input:focus, .dep-list-item-body textarea:focus {
   box-shadow: none;
   outline: 0;
 }
 
-.dep-list-item-body input::placeholder {
+.dep-list-item-body input::placeholder, .dep-list-item-body textarea::placeholder {
   color: #0c0c0c;
 }
 .dep-list-item-body p {
@@ -243,6 +257,15 @@ h6 {
 
 .status-color-container .color-option:nth-child(4) .color-circle {
   background: linear-gradient(90deg, #afb1c0 0%, #8f9fae 100%);
+}
+
+.support-msg-input-container {
+  padding-top: 20px;
+}
+
+.btn-container {
+  margin-left: auto;
+  text-align: right;
 }
 
 .btn {

@@ -4,7 +4,6 @@
     import { useDepsStore } from '@/stores/deps'
     import { storeToRefs } from 'pinia'
     import { DepStatusColors, Themes } from "@/types"
-    import type { SupportMsgs } from "@/types"
     import { isInArray } from "@/utilities/utils"
 
     const optionsStore = useOptionsStore()
@@ -18,7 +17,7 @@
         title: string
         statusMsg: string
         statusColor: DepStatusColors
-        supportMsgs: SupportMsgs
+        supportMsg: string
     }>()
 
     const setExpanded = (id: string) => {
@@ -55,15 +54,15 @@
         <div class="tile-body" :class="themeOption === Themes.NetMinded ? 'tile-body-netminded' : 'tile-body-pti'">
             <p>{{ truncateTxt(statusMsg, 60) }}</p>
         </div>
-        <template v-if="supportMsgs[statusColor]">
-            <div class="support-msg-container" v-if="toggleSupportMsg && supportMsgs[statusColor].length > 0">
+        <template v-if="supportMsg">
+            <div class="support-msg-container" v-if="toggleSupportMsg && supportMsg.length > 0">
                 <button :class="['support-button', setHeaderColor(statusColor)]" @click="expanded = !expanded, updateDepSupportExpanded(id, expanded)"><font-awesome-icon icon="fa-solid fa-headset" /> Support
                     <span>
-                        <font-awesome-icon v-if="expanded" icon="fa-solid fa-chevron-up" /> 
-                        <font-awesome-icon v-else icon="fa-solid fa-chevron-down" />
+                        <span class="tile-up" v-if="expanded">⌃</span>
+                        <span class="tile-down" v-else>⌄</span>
                     </span>
                 </button>
-                <p class="support-msg-text" v-if="expanded">{{ supportMsgs[statusColor] }}</p>
+                <p class="support-msg-text" v-if="expanded">{{ truncateTxt(supportMsg, 250) }}</p>
             </div>
         </template>
     </div>
@@ -172,8 +171,16 @@
     padding-right: 3px;
 }
 
-.fa-chevron-up, .fa-chevron-down {
-    margin-left: 7px;
+.tile-up {
+    position: relative;
+    left: 2px;
+    top: 3px;
+}
+
+.tile-down {
+    position: relative;
+    left: 2px;
+    bottom: 3px;
 }
 
 .support-msg-text {
