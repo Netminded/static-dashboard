@@ -41,7 +41,7 @@
         </Sortable>
         <div class="deps-actions">
             <button class="btn btn-secondary" :class="depsList.length === 0 && 'btn-below'" @click="addNewDep">
-                <font-awesome-icon icon="fa-solid fa-plus"/>Create New Dependency
+                <font-awesome-icon icon="fa-solid fa-plus"/>Create New Diagnostic Item
             </button>
             <button v-if="depsList.length >= 1" class="btn btn-secondary" :class="depsList.length === 0 && 'btn-below'" @click="resetDeps">
                 <font-awesome-icon icon="fa-solid fa-rotate-left" />Reset

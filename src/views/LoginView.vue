@@ -1,18 +1,33 @@
 <script setup lang="ts">
+    import { ref } from 'vue'
     import { useUsersStore } from '@/stores/users'
     import { useRouter } from 'vue-router'
 
     const usersStore = useUsersStore()
     const { setSignIn } = usersStore
     const router = useRouter()
+    const username = ref('')
+    const password = ref('')
+    const loginError = ref('')
+
+    const validateField = (field: string) => {
+      return field.trim().length > 0 ? true : false
+    }
 
     const loginUser = async () => {
-      try {
-        await setSignIn()
-        router.push('/')
-      }
-      catch (err) {
-        console.log(err)
+      if(validateField(username.value) && validateField(password.value)) {
+          try {
+          await setSignIn(username.value, password.value)
+          router.push('/')
+        }
+        catch (err) {
+          console.log(err)
+        }
+      } else {
+        loginError.value = 'Please enter a valid email address and password.'
+        setTimeout(() => {
+          loginError.value = ''
+        }, 5000)
       }
     }
 </script>
@@ -21,22 +36,17 @@
   <main>
     <div class="login-container">
       <div class="login-icon">
-        <font-awesome-icon icon="fa-solid fa-diagram-next" size="3x" />
+        <font-awesome-icon icon="fa-regular fa-thumbs-up" size="3x" />
       </div>
-      <h1>Deps Dashboard</h1>
-      <div class="google-btn" @click="loginUser">
-        <div class="google-img">
-          <img
-            width="18"
-            height="18"
-            src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-            alt="Google Logo"
-          />
-        </div>
-        <div class="google-text">
-          <p>Sign in with Google</p>
-        </div>
+      <h1>Service Assurance<br/>Dashboard</h1>
+      <div>
+        <input class="login-field" type="text" placeholder="Email Address" v-model="username" />
+        <input class="login-field" type="password" placeholder="Password" v-model="password" />
       </div>
+      <div v-if="loginError.length > 0">
+        <p class="login-error">{{ loginError }}</p>
+      </div>
+      <button class="btn" @click="loginUser">Login</button>
     </div>
   </main>
 </template>
@@ -59,6 +69,7 @@ main {
   border-radius: 15px;
   margin-left: 5%;
   margin-right: 5%;
+  max-width: 400px;
 }
 
 @media screen and (max-width: 380px) {
@@ -77,10 +88,11 @@ main {
   margin-right: auto;
 }
 
-.login-container .fa-diagram-next {
+.login-container .fa-thumbs-up {
   color: #ffffff;
   position: relative;
   top: 8px;
+  left: 3px;
 }
 
 .login-container h1 {
@@ -90,54 +102,55 @@ main {
   color: #4c4d55;
   padding: 20px;
   text-transform: uppercase;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 
-.google-btn {
-  display: flex;
-  justify-content: space-between;
-  width: 250px;
-  border: 2px solid #4285f4;
-  margin-left: auto;
-  margin-right: auto;
+.login-field {
+  background: transparent;
+  border: transparent;
+  border-bottom: 3px solid #1b1a4b;
+  border-radius: 0;
+  color: #4c4d55;
+  font-family: "Karla", sans-serif;
+  font-size: 16px;
+  padding: 10px 20px 10px 0;
+  width: 100%;
+}
+
+.login-field:focus {
+  box-shadow: none;
+  outline: 0;
+}
+
+.login-field::placeholder {
+  color: #0c0c0c;
+}
+
+.login-error {
+  color: #4c4d55;
+  font-family: "Karla", sans-serif;
+  font-size: 16px;
+  margin: 15px 0 0 0;
+}
+
+.btn {
+  background: #0d6af6;
+  border: 0 solid transparent;
+  border-radius: 50px;
+  box-shadow: 0 4px 16px rgb(32 19 104 / 25%);
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  transition-timing-function: ease-in;
+  transition: 0.5s;
+  margin-top: 20px;
   cursor: pointer;
 }
 
-@media screen and (max-width: 380px) {
-  .google-btn {
-    width: 180px;
-  }
-}
-
-.google-img {
-  background-color: #ffffff;
-  width: 50px;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8px;
-}
-
-@media screen and (max-width: 380px) {
-  .google-img {
-    width: 35px;
-  }
-}
-
-.google-text {
-  background: #4285f4;
-  color: #ffffff;
-  font-family: "Roboto", sans-serif;
-  font-weight: 400;
-  padding: 10px;
-  flex-grow: 1;
-  text-align: center;
-}
-
-@media screen and (max-width: 380px) {
-  .google-text {
-    font-size: 14px;
-  }
+.btn:hover {
+  background: #0c54c0;
 }
 </style>

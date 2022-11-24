@@ -1,7 +1,7 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { auth, provider } from "../firebase/firebaseConfig"
-import { signInWithPopup, signOut } from "@firebase/auth"
+import { signInWithPopup, signInWithEmailAndPassword, signOut } from "@firebase/auth"
 import { validateEmail, getFirstName } from "@/utilities/utils"
 import type { User } from "@firebase/auth"
 
@@ -39,11 +39,13 @@ export const useUsersStore = defineStore("users", () => {
   }
 
   // Authenticate a user with Google sign in popup, validate the user email and then update the user 
-  const setSignIn = async () => {
-    const response = await signInWithPopup(auth, provider)
+  const setSignIn = async (username: string, password: string) => {
+    const response = await signInWithEmailAndPassword(auth, username, password)
       if(response) {
         const fbUser = response.user
-        validateEmail(response.user.email) ? (setLoggedIn(true), setUser({displayName: fbUser.displayName, photoURL: fbUser.photoURL, uid: fbUser.uid})) : await setLogOut()
+        setUser({displayName: fbUser.displayName, photoURL: fbUser.photoURL, uid: fbUser.uid})
+        setLoggedIn(true)
+        // validateEmail(response.user.email) ? (setLoggedIn(true), setUser({displayName: fbUser.displayName, photoURL: fbUser.photoURL, uid: fbUser.uid})) : await setLogOut()
       } else {
         console.log('Error signing in!')
       }

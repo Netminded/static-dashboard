@@ -16,6 +16,7 @@ import { faGhost } from "@fortawesome/free-solid-svg-icons"
 import { faCameraRetro } from "@fortawesome/free-solid-svg-icons"
 import { faRotateLeft } from "@fortawesome/free-solid-svg-icons"
 import { faHeadset } from "@fortawesome/free-solid-svg-icons"
+import { faThumbsUp } from "@fortawesome/free-regular-svg-icons"
 import { faHand } from "@fortawesome/free-regular-svg-icons"
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons"
 library.add(
@@ -30,6 +31,7 @@ library.add(
   faCameraRetro,
   faRotateLeft,
   faHeadset,
+  faThumbsUp,
   faHand,
   faTrashCan
 )
