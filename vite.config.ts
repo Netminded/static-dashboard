@@ -7,7 +7,7 @@ import { VitePluginFonts } from "vite-plugin-fonts";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/static-dashboard/',
+  base: './',
   plugins: [
     vue(),
     VitePluginFonts({

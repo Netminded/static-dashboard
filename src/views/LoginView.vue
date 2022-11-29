@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref } from 'vue'
     import { useUsersStore } from '@/stores/users'
-    import { useRouter } from 'vue-router'
+    import { useRouter, RouterLink } from 'vue-router'
 
     const usersStore = useUsersStore()
     const { setSignIn } = usersStore
@@ -47,7 +47,8 @@
         <p class="login-error">{{ loginError }}</p>
       </div>
       <button class="btn" @click="loginUser">Login</button>
-      <a class="login-link" href="#" @click="router.push('/reset')">Forgotten your Password?</a>
+      <!-- <a class="login-link" href="#" @click="router.push('/reset')">Forgotten your Password?</a> -->
+      <router-link to="/reset" class="login-link">Forgotten your password?</router-link>
     </div>
   </main>
 </template>
@@ -160,6 +161,8 @@ main {
 
 .login-link {
   color: #0d6af6;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
   text-decoration: none;
   margin-top: 25px;
   display: block;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref, onMounted } from 'vue'
     import { useUsersStore } from '@/stores/users'
-    import { useRouter } from 'vue-router'
+    import { useRouter, RouterLink } from 'vue-router'
 
     const usersStore = useUsersStore()
     const { fetchResetCode, setNewPassword } = usersStore
@@ -10,7 +10,8 @@
     const passwordConfirm = ref('')
     const resetError = ref('')
     const validCode = ref(false)
-    const urlParams = new URLSearchParams(window.location.search)
+    const urlParams = new URLSearchParams(new URL(window.location.href).hash.split('?')[1])
+    console.log(urlParams)
 
     const validateField = (field: string) => {
       return field.trim().length > 0 ? true : false
@@ -51,7 +52,8 @@
                   if (isReset?.validReset) { 
                     resetError.value = 'Password successfully reset!'
                     resetErrorMsg() 
-                    router.push('/login')
+                    password.value = ''
+                    passwordConfirm.value = ''
                   } else if (isReset?.codeError) {
                     resetError.value = isReset['codeError']
                     resetErrorMsg()
@@ -93,7 +95,7 @@
         <p class="reset-error">{{ resetError }}</p>
       </div>
       <button v-if="validCode" class="btn" @click="updatePassword">Update Password</button>
-      <a class="login-link" href="#" @click="router.push('/')">Back to Login</a>
+      <router-link class="login-link" to="/">Back to Login</router-link>
     </div>
   </main>
 </template>
@@ -206,6 +208,8 @@ main {
 
 .login-link {
   color: #0d6af6;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
   text-decoration: none;
   margin-top: 25px;
   display: block;
