@@ -4,30 +4,39 @@
     import { useRouter } from 'vue-router'
 
     const usersStore = useUsersStore()
-    const { setSignIn } = usersStore
+    const { setResetPassword } = usersStore
     const router = useRouter()
     const username = ref('')
-    const password = ref('')
-    const loginError = ref('')
+    const resetError = ref('')
 
     const validateField = (field: string) => {
       return field.trim().length > 0 ? true : false
     }
 
-    const loginUser = async () => {
-      if(validateField(username.value) && validateField(password.value)) {
+    const resetErrorMsg = () => {
+      setTimeout(() => {
+        resetError.value = ''
+      }, 5000) 
+    }
+
+    const resetPassword = async () => {
+      if(validateField(username.value)) {
           try {
-          await setSignIn(username.value, password.value)
-          router.push('/')
-        }
-        catch (err) {
-          console.log(err)
-        }
+          const isEmailSent = await setResetPassword(username.value)
+          if (isEmailSent?.validReset) { 
+              resetError.value = 'Password reset request sent! Please check your email inbox.'
+              resetErrorMsg()
+            } else if (isEmailSent?.codeError) {
+              resetError.value = isEmailSent['codeError']
+              resetErrorMsg() 
+            }
+          }
+          catch (err) {
+            console.log(err)
+          }
       } else {
-        loginError.value = 'Sign-in credentials cannot be empty.'
-        setTimeout(() => {
-          loginError.value = ''
-        }, 5000)
+        resetError.value = 'Please enter a valid email address.'
+        resetErrorMsg()
       }
     }
 </script>
@@ -38,16 +47,15 @@
       <div class="login-icon">
         <font-awesome-icon icon="fa-regular fa-thumbs-up" size="3x" />
       </div>
-      <h1>Service Assurance<br/>Dashboard</h1>
+      <h1>Request Password Reset</h1>
       <div>
         <input class="login-field" type="text" placeholder="Email Address" v-model="username" />
-        <input class="login-field" type="password" placeholder="Password" v-model="password" />
       </div>
-      <div v-if="loginError.length > 0">
-        <p class="login-error">{{ loginError }}</p>
+      <div v-if="resetError.length > 0">
+        <p class="reset-error">{{ resetError }}</p>
       </div>
-      <button class="btn" @click="loginUser">Login</button>
-      <a class="login-link" href="#" @click="router.push('/reset')">Forgotten your Password?</a>
+      <button class="btn" @click="resetPassword">Reset Password</button>
+      <a class="login-link" href="#" @click="router.push('/')">Back to Login</a>
     </div>
   </main>
 </template>
@@ -127,7 +135,7 @@ main {
   color: #0c0c0c;
 }
 
-.login-error {
+.reset-error {
   background: #4c4d55;
   border-radius: 15px;
   color: #FFFFFF;

@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router"
 import LoginView from "../views/LoginView.vue"
+import ResetPasswordView from "../views/ResetPasswordView.vue"
+import SetPasswordView from "../views/SetPasswordView.vue"
 import DashboardView from "../views/DashboardView.vue"
 import NotFound from "../views/NotFound.vue"
 import { authedUser } from '@/firebase/firebaseConfig'
@@ -24,6 +26,16 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: LoginView,
+    },
+    {
+      path: "/reset",
+      name: "reset",
+      component: ResetPasswordView,
+    },
+    {
+      path: "/update",
+      name: "update",
+      component: SetPasswordView,
     },
   ],
 })

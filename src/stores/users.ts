@@ -1,7 +1,7 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { auth, provider } from "../firebase/firebaseConfig"
-import { signInWithPopup, signInWithEmailAndPassword, signOut } from "@firebase/auth"
+import { signInWithEmailAndPassword, sendPasswordResetEmail, verifyPasswordResetCode, confirmPasswordReset, signOut } from "@firebase/auth"
 import { validateEmail, getFirstName } from "@/utilities/utils"
 import type { User } from "@firebase/auth"
 
@@ -51,11 +51,56 @@ export const useUsersStore = defineStore("users", () => {
       }
   }
 
+  const setResetPassword = async (username: string) => {
+    let fbError
+    let isError = false
+    await sendPasswordResetEmail(auth, username).catch((err) => { 
+      isError = true
+      fbError = err.message
+    })
+    if (isError) {
+      console.log('Error resetting password')
+      return { validReset: false, codeError: fbError }
+    } else {
+      return { validReset: true }
+    } 
+  }
+
+  const fetchResetCode = async (code: string) => {
+    let fbError
+    let isError = false
+    await verifyPasswordResetCode(auth, code).catch((err) => { 
+      isError = true
+      fbError = err.message
+    })
+    if (isError) {
+      console.log('Error validating reset code')
+      return { validCode: false, codeError: fbError }
+    } else {
+      return { validCode: true }
+    } 
+  }
+
+  const setNewPassword = async (code: string, newPassword: string) => {
+    let fbError
+    let isError = false
+    await confirmPasswordReset(auth, code, newPassword).catch((err) => { 
+      isError = true
+      fbError = err.message
+    })
+    if (isError) {
+      console.log('Error resetting password')
+      return { validReset: false, codeError: fbError }
+    } else {
+      return { validReset: true }
+    } 
+  }
+
   // Receive a Firebase user and update whether they are logged in, if they are then update the user  
   const fetchUser = (fbUser: User) => {
     setLoggedIn(fbUser !== null)
     fbUser ? setUser({displayName: fbUser.displayName, photoURL: fbUser.photoURL, uid: fbUser.uid}) : setUser(null)
   }
 
-  return { user, firstName, setUser, fetchUser, setSignIn, setLogOut }
+  return { user, firstName, setUser, fetchUser, setSignIn, setResetPassword, fetchResetCode, setNewPassword, setLogOut }
 })

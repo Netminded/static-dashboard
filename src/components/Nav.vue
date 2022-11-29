@@ -40,6 +40,7 @@ nav {
   padding: 20px;
   background: linear-gradient(108.69deg, #092842 13.22%, #0c0527 86.57%)
     no-repeat;
+    z-index: 1;
 }
 
 @media screen and (max-width: 310px) {

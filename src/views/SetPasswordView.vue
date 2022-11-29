@@ -1,35 +1,81 @@
 <script setup lang="ts">
-    import { ref } from 'vue'
+    import { ref, onMounted } from 'vue'
     import { useUsersStore } from '@/stores/users'
     import { useRouter } from 'vue-router'
 
     const usersStore = useUsersStore()
-    const { setSignIn } = usersStore
+    const { fetchResetCode, setNewPassword } = usersStore
     const router = useRouter()
-    const username = ref('')
     const password = ref('')
-    const loginError = ref('')
+    const passwordConfirm = ref('')
+    const resetError = ref('')
+    const validCode = ref(false)
+    const urlParams = new URLSearchParams(window.location.search)
 
     const validateField = (field: string) => {
       return field.trim().length > 0 ? true : false
     }
 
-    const loginUser = async () => {
-      if(validateField(username.value) && validateField(password.value)) {
+    const resetErrorMsg = () => {
+      setTimeout(() => {
+        resetError.value = ''
+      }, 5000) 
+    }
+
+    const validateResetCode = async () => {
+      if(urlParams.has('oobCode')) {
+        if(urlParams.get('oobCode') !== null) {
           try {
-          await setSignIn(username.value, password.value)
-          router.push('/')
+            const isValid = await fetchResetCode(urlParams.get('oobCode')!)
+            if (isValid?.validCode) { 
+              validCode.value = isValid.validCode 
+            } else if (isValid?.codeError) {
+              resetError.value = isValid['codeError']
+              resetErrorMsg() 
+            }
+          }
+          catch(err) {
+            console.log(err)
+          }
         }
-        catch (err) {
-          console.log(err)
-        }
-      } else {
-        loginError.value = 'Sign-in credentials cannot be empty.'
-        setTimeout(() => {
-          loginError.value = ''
-        }, 5000)
       }
     }
+
+    const updatePassword = async () => {
+      if(validateField(password.value) && validateField(passwordConfirm.value)) {
+        if(password.value === passwordConfirm.value) {
+            if(urlParams.has('oobCode')) {
+              if(urlParams.get('oobCode') !== null) {
+                try {
+                  const isReset = await setNewPassword(urlParams.get('oobCode')!, password.value)
+                  if (isReset?.validReset) { 
+                    resetError.value = 'Password successfully reset!'
+                    resetErrorMsg() 
+                    router.push('/login')
+                  } else if (isReset?.codeError) {
+                    resetError.value = isReset['codeError']
+                    resetErrorMsg()
+                  }
+                }
+                catch(err) {
+                  console.log(err)
+                }
+              }
+            }
+        } else {
+            resetError.value = 'Please make sure passwords match.'
+            resetErrorMsg()
+        }
+      } else {
+        resetError.value = 'Please enter a valid password.'
+        resetErrorMsg()
+      }
+    }
+
+    onMounted(async () => {
+        validateResetCode()
+    })
+
 </script>
 
 <template>
@@ -38,16 +84,16 @@
       <div class="login-icon">
         <font-awesome-icon icon="fa-regular fa-thumbs-up" size="3x" />
       </div>
-      <h1>Service Assurance<br/>Dashboard</h1>
-      <div>
-        <input class="login-field" type="text" placeholder="Email Address" v-model="username" />
-        <input class="login-field" type="password" placeholder="Password" v-model="password" />
+      <h1>Update Password</h1>
+      <div v-if="validCode">
+        <input class="login-field" type="password" placeholder="New Password" v-model="password" />
+        <input class="login-field" type="password" placeholder="New Password" v-model="passwordConfirm" />
       </div>
-      <div v-if="loginError.length > 0">
-        <p class="login-error">{{ loginError }}</p>
+      <div v-if="resetError.length > 0">
+        <p class="reset-error">{{ resetError }}</p>
       </div>
-      <button class="btn" @click="loginUser">Login</button>
-      <a class="login-link" href="#" @click="router.push('/reset')">Forgotten your Password?</a>
+      <button v-if="validCode" class="btn" @click="updatePassword">Update Password</button>
+      <a class="login-link" href="#" @click="router.push('/')">Back to Login</a>
     </div>
   </main>
 </template>
@@ -127,7 +173,7 @@ main {
   color: #0c0c0c;
 }
 
-.login-error {
+.reset-error {
   background: #4c4d55;
   border-radius: 15px;
   color: #FFFFFF;
