@@ -4,7 +4,7 @@
   import { useRouter } from "vue-router"
 
   const usersStore = useUsersStore()
-  const { user } = storeToRefs(usersStore)
+  const { user, fullName } = storeToRefs(usersStore)
   const router = useRouter()
   const { setLogOut } = usersStore
 
@@ -26,7 +26,8 @@
       height="28"
     />
     <div>
-      <span class="user-img" v-if="user.data?.photoURL"><img :src="user.data?.photoURL"/></span>
+      <p v-if="fullName" class="user-name">{{fullName}}</p>
+      <span class="ver-divider"></span>
       <a href="#" v-if="user.loggedIn" @click.prevent="signOut"><font-awesome-icon icon="fa-solid fa-arrow-right-from-bracket" />Logout</a>
     </div>
   </nav>
@@ -49,6 +50,16 @@ nav {
   }
 }
 
+.user-name {
+  color: #FFFFFF;
+  font-family: "Poppins", sans-serif;
+  display: inline-block;
+  font-weight: 600;
+  padding-right: 15px;
+  position: relative;
+  top: 1px;
+}
+
 .user-img {
   display: inline-block;
   width: 32px;
@@ -68,6 +79,15 @@ nav {
   margin-bottom: -15px;
 }
 
+.ver-divider {
+  width: 3px;
+  height: 20px;
+  display: inline-block;
+  background: #6d55f7;
+  position: relative;
+  top: 6px;
+}
+
 nav a {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
@@ -76,8 +96,9 @@ nav a {
   text-decoration: none;
   text-transform: uppercase;
   padding: 5px;
+  margin-left: 10px;
   position: relative;
-  top: 5px;
+  top: 1px;
 }
 
 nav .fa-arrow-right-from-bracket {

@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app"
 import { getAuth, GoogleAuthProvider } from "firebase/auth"
+import { getDatabase } from "firebase/database"
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FB_API_KEY,
@@ -7,7 +8,8 @@ const firebaseConfig = {
   projectId: import.meta.env.VITE_FB_PROJECT_ID,
   storageBucket: import.meta.env.VITE_FB_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FB_MESSAGE_SENDER_ID,
-  appId: import.meta.env.VITE_FB_APP_ID
+  appId: import.meta.env.VITE_FB_APP_ID,
+  databaseURL: import.meta.env.VITE_FB_DATABASE_URL
 }
 
 const app = initializeApp(firebaseConfig)
@@ -28,4 +30,6 @@ const authedUser = () => {
   })
 }
 
-export { auth, provider, authedUser }
+const database = getDatabase(app)
+
+export { auth, provider, database, authedUser }

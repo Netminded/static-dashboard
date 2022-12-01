@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { ref } from 'vue'
+    import { ref as fbRef, onValue} from "firebase/database";
     import { Sortable } from "sortablejs-vue3"
     import DashColorSection from "../components/DashColorSection.vue"
     import DashThemeSection from "../components/DashThemeSection.vue"
@@ -10,10 +11,11 @@
     import { useUsersStore } from '@/stores/users'
 
     const usersStore = useUsersStore()
-    const { firstName } = storeToRefs(usersStore)
+    const { userId, fullName } = storeToRefs(usersStore)
+    const { setUserFromDb } = usersStore
 
     const depsStore = useDepsStore()
-    const { depsList } = storeToRefs(depsStore)
+    const { depsList, addedDepsList } = storeToRefs(depsStore)
     const { addNewDep, onSort, resetDeps } = depsStore
 
     // Sortable values
@@ -27,7 +29,7 @@
 
 <template>
     <div class="deps-config">
-        <h4 class="dashboard-greeting"><font-awesome-icon icon="fa-regular fa-hand" /> Hello {{firstName}}</h4>
+        <h4 class="dashboard-greeting">Diagnostic Chain Designer</h4>
         <hr />
         <DashColorSection />
         <DashThemeSection />
@@ -47,6 +49,9 @@
                 <font-awesome-icon icon="fa-solid fa-rotate-left" />Reset
             </button>
         </div>
+        <button v-if="addedDepsList.length >= 1" class="btn" :class="depsList.length === 0 && 'btn-below'" @click="resetDeps">
+            Save Chain
+        </button>
     </div>
 </template>
 
@@ -70,18 +75,13 @@
         }
     }
 
-    .deps-config .fa-hand {
-        margin-right: 5px;
-        transform: rotate(15deg);
-    }
-
     .deps-config .dashboard-greeting {
         color: #4c4d55;
         font-family: "Poppins";
         font-weight: 800;
         font-size: 20px;
         text-align: center;
-        margin: 0 20px 20px 20px;
+        margin: 0 5px 20px 5px;
     }
 
     .deps-config hr {
@@ -113,10 +113,15 @@
     }
 
     .btn {
+        background: #0d6af6;
+        color: #FFFFFF;
+        border: 0 solid transparent;
+        border-radius: 50px;
+        box-shadow: 0 4px 16px rgb(32 19 104 / 25%);
         font-family: "Poppins", sans-serif;
         font-size: 12px;
         font-weight: 600;
-        padding: 10px 0;
+        padding: 10px 20px;
         text-transform: uppercase;
         transition-timing-function: ease-in;
         transition: 0.5s;
@@ -128,6 +133,9 @@
         background: transparent;
         border: 0 solid transparent;
         color: #0d6af6;
+        padding: 10px 0;
+        border-radius: 0;
+        box-shadow: none;
     }
 
     .btn-secondary:hover {
