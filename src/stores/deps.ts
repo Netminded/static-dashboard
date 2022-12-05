@@ -2,7 +2,9 @@ import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { v4 as uuidv4 } from 'uuid'
 import { DepStatusColors } from "@/types"
-import type { Dep, SupportMsgs } from "@/types"
+import type { Dep, Deps, SupportMsgs } from "@/types"
+import { database } from "../firebase/firebaseConfig"
+import { ref as fbRef, onValue, push, query, orderByChild } from "firebase/database";
 
 
 export const useDepsStore = defineStore("deps", () => {
@@ -24,6 +26,8 @@ export const useDepsStore = defineStore("deps", () => {
     }
 
     const depsList = ref<Dep[]>([])
+
+    const allDepsList = ref<Array<Deps>>([])
 
     // Compute a single dependency based on an index
     const depItem = computed(() => {
@@ -71,5 +75,56 @@ export const useDepsStore = defineStore("deps", () => {
         depsList.value = []
     }
 
-    return { depsList, depItem, addedDepsList, addNewDep, updateDep, updateDepSupportExpanded, removeDep, onSort, resetDeps}
+    const saveDepToDb = (userId: string, role: number, teamId: string, depName: string, dep: string) => {
+        let fbError
+        let isError = false
+        let isInTeam = false
+        const teamRef = fbRef(database, `teams/${teamId}/team_members/${userId}`)
+        const teamDepsRef = fbRef(database, `teams/${teamId}/diagnostic_chains`)
+        onValue(teamRef, (snapshot) => {
+            let data = snapshot.val()
+            if(data['user_id'] && data['user_id'] === userId) isInTeam = true
+            if(role <= 2 && isInTeam) {
+                push(teamDepsRef, {
+                    chain_name: depName,
+                    chain: dep,
+                    timestamp: Date.now()
+                }).catch((err) => {
+                    isError = true
+                    fbError = err
+                })
+            }
+        })
+        // TODO: Add validation to the UI dep has saved
+    }
+
+    const getAllSavedDeps = (userId: string, teamId: string,) => {
+        let fbError
+        let isError = false
+        let isInTeam = false
+        const teamRef = fbRef(database, `teams/${teamId}/team_members/${userId}`)
+        const teamDepsRef = fbRef(database, `teams/${teamId}/diagnostic_chains`)
+        onValue(teamRef, (snapshot) => {
+            let data = snapshot.val()
+            if(data['user_id'] && data['user_id'] === userId) {
+                onValue(teamDepsRef, (snapshot) => {
+                    snapshot.forEach((childSnapshot) => {
+                        if(childSnapshot.key) {
+                            allDepsList.value = []
+                            allDepsList.value.push({
+                                chainId: childSnapshot.key,
+                                chain: JSON.parse(childSnapshot.val().chain),
+                                chainName: childSnapshot.val().chain_name,
+                                timestamp: childSnapshot.val().timestamp
+                            })
+                        }
+                    })
+                })
+            }
+        })
+        // TODO: Add validation to the UI dep has saved
+    }
+
+    return { depsList, allDepsList, depItem, addedDepsList, 
+        addNewDep, updateDep, updateDepSupportExpanded, removeDep, onSort, resetDeps, saveDepToDb, getAllSavedDeps }
 })

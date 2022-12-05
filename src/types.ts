@@ -9,6 +9,14 @@ export interface Dep {
     supportExpanded: boolean
 }
 
+export interface Deps {
+    chainId: string,
+    chain: Dep[],
+    // chain: string,
+    chainName: string,
+    timestamp: number
+}
+
 export enum BkColours {
     White = "White",
     Black = "Black",

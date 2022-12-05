@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app"
 import { getAuth, GoogleAuthProvider } from "firebase/auth"
-import { getDatabase } from "firebase/database"
+import { getDatabase, } from "firebase/database"
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FB_API_KEY,

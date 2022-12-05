@@ -4,19 +4,20 @@
     import { Sortable } from "sortablejs-vue3"
     import DashColorSection from "../components/DashColorSection.vue"
     import DashThemeSection from "../components/DashThemeSection.vue"
-    import SupportMsgToggleSectionVue from "./SupportMsgToggleSection.vue"
+    import SupportMsgToggleSection from "./SupportMsgToggleSection.vue"
     import DashDepListItem from "../components/DashDepListItem.vue"
+    import SaveDepSection from './SaveDepSection.vue';
     import { storeToRefs } from 'pinia'
     import { useDepsStore } from '@/stores/deps'
     import { useUsersStore } from '@/stores/users'
 
     const usersStore = useUsersStore()
-    const { userId, fullName } = storeToRefs(usersStore)
+    const { userId, teamId, role } = storeToRefs(usersStore)
     const { setUserFromDb } = usersStore
 
     const depsStore = useDepsStore()
     const { depsList, addedDepsList } = storeToRefs(depsStore)
-    const { addNewDep, onSort, resetDeps } = depsStore
+    const { addNewDep, onSort, resetDeps, saveDepToDb } = depsStore
 
     // Sortable values
     const sortableInstance = ref({
@@ -33,7 +34,7 @@
         <hr />
         <DashColorSection />
         <DashThemeSection />
-        <SupportMsgToggleSectionVue />
+        <SupportMsgToggleSection />
         <Sortable :class="depsList.length >= 1 && 'deps-list'" :list="depsList" item-key="id" :options="sortableInstance" @sort="(event) => onSort(event)">
             <template #item="{element, index}">
                 <div class="draggable" :key="element.id">
@@ -49,9 +50,7 @@
                 <font-awesome-icon icon="fa-solid fa-rotate-left" />Reset
             </button>
         </div>
-        <button v-if="addedDepsList.length >= 1" class="btn" :class="depsList.length === 0 && 'btn-below'" @click="resetDeps">
-            Save Chain
-        </button>
+        <SaveDepSection />
     </div>
 </template>
 

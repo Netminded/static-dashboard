@@ -2,7 +2,8 @@ import { createRouter, createWebHashHistory } from "vue-router"
 import LoginView from "../views/LoginView.vue"
 import ResetPasswordView from "../views/ResetPasswordView.vue"
 import SetPasswordView from "../views/SetPasswordView.vue"
-import DashboardView from "../views/DashboardView.vue"
+import DesignView from "../views/DesignView.vue"
+import DependencyList from "../views/DependencyList.vue"
 import NotFound from "../views/NotFound.vue"
 import { authedUser } from '@/firebase/firebaseConfig'
 
@@ -13,7 +14,15 @@ const router = createRouter({
     {
       path: "/",
       name: "dashboard",
-      component: DashboardView,
+      component: DependencyList,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: "/design",
+      name: "design",
+      component: DesignView,
       meta: {
         requiresAuth: true
       }

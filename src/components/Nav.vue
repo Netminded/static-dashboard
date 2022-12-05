@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { storeToRefs } from 'pinia'
   import { useUsersStore } from '@/stores/users'
-  import { useRouter } from "vue-router"
+  import { useRouter, RouterLink } from "vue-router"
 
   const usersStore = useUsersStore()
   const { user, fullName } = storeToRefs(usersStore)
@@ -18,16 +18,19 @@
 
 <template>
   <nav>
-    <img
+    <div>
+      <img
       alt="NetMinded Logo"
       class="logo"
       src="@/assets/NetMinded_Logo.svg"
       width="160"
       height="28"
     />
+    <router-link v-if="user.loggedIn" to="/">Diagnostic Chains</router-link>
+    </div>
     <div>
       <p v-if="fullName" class="user-name">{{fullName}}</p>
-      <span class="ver-divider"></span>
+      <span v-if="user.loggedIn" class="ver-divider"></span>
       <a href="#" v-if="user.loggedIn" @click.prevent="signOut"><font-awesome-icon icon="fa-solid fa-arrow-right-from-bracket" />Logout</a>
     </div>
   </nav>

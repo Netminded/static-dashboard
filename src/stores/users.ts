@@ -124,7 +124,6 @@ export const useUsersStore = defineStore("users", () => {
   // Fetch user info from db
   const setUserFromDb = (userId: string | null) => {
     if (userId) {
-      console.log(true)
       const usersRef = fbRef(database, `users/${userId}`)
       onValue(usersRef, (snapshot) => {
         let data = snapshot.val()
