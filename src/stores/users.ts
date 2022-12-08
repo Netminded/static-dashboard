@@ -5,6 +5,7 @@ import { signInWithEmailAndPassword, sendPasswordResetEmail, verifyPasswordReset
 import { ref as fbRef, onValue} from "firebase/database";
 import { validateEmail, getFirstName } from "@/utilities/utils"
 import type { User } from "@firebase/auth"
+import { useDepsStore } from '@/stores/deps'
 
 export const useUsersStore = defineStore("users", () => {
 
@@ -22,6 +23,8 @@ export const useUsersStore = defineStore("users", () => {
     loggedIn: false,
     data: null,
   })
+
+  const depsStore = useDepsStore()
 
   //Compute a users full name from their first and last names
   const fullName = computed(() => user.value.data?.firstName && user.value.data?.lastName ? `${user.value.data?.firstName} ${user.value.data?.lastName}` : '')
@@ -47,14 +50,31 @@ export const useUsersStore = defineStore("users", () => {
     setUser(null)
   }
 
-  // Set the user display name, profile pic and user id
-  const setUser = (data: { uid: string | null } | null) => {
-    user.value.data = data
-    if(data?.uid) setUserFromDb(data.uid)
+  // Set the user id, user name, team id, team name and team role then fetch deps available to the user
+  const setUser = async (authUser: { uid: string | null } | null) => {
+    user.value.data = authUser
+    if (authUser?.uid) {
+      try {
+        const data = await updateUserFromDb(authUser.uid)
+        if(data) {
+          let userData: any = data
+          user.value.data = {uid: authUser.uid, firstName: userData.first_name, lastName: userData.last_name, team: userData.team}
+          if(teamId.value) depsStore.getAllSavedDeps(authUser.uid, teamId.value)
+        }
+      } catch(err) {
+        console.log(err)
+      }
+    }
   }
 
-  const setUserInfo = (data: { uid: string | null, firstName: string | null, lastName: string | null, team?: Team | null } | null) => {
-    user.value.data = data
+  // Return a Promise with the user database snapshot
+  const updateUserFromDb = (userId: string) => {
+    return new Promise((resolve, reject) => {
+      const usersRef = fbRef(database, `users/${userId}`)
+      onValue(usersRef, (snapshot) => {
+        resolve(snapshot.val())
+      })
+    })
   }
 
   // Authenticate a user with Google sign in popup, validate the user email and then update the user 
@@ -121,16 +141,5 @@ export const useUsersStore = defineStore("users", () => {
     fbUser ? setUser({uid: fbUser.uid}) : setUser(null)
   }
 
-  // Fetch user info from db
-  const setUserFromDb = (userId: string | null) => {
-    if (userId) {
-      const usersRef = fbRef(database, `users/${userId}`)
-      onValue(usersRef, (snapshot) => {
-        let data = snapshot.val()
-        if(data['first_name'] && data['last_name'] && data['team']) setUserInfo({uid: userId, firstName: data['first_name'], lastName: data['last_name'], team: data['team']})
-      })
-    }
-  }
-
-  return { user, fullName, userId, teamId, role, setUser, fetchUser, setUserFromDb, setSignIn, setResetPassword, fetchResetCode, setNewPassword, setLogOut }
+  return { user, fullName, userId, teamId, role, setUser, fetchUser, setSignIn, setResetPassword, fetchResetCode, setNewPassword, setLogOut }
 })

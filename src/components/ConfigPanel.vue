@@ -1,6 +1,5 @@
 <script setup lang="ts">
     import { ref } from 'vue'
-    import { ref as fbRef, onValue} from "firebase/database";
     import { Sortable } from "sortablejs-vue3"
     import DashColorSection from "../components/DashColorSection.vue"
     import DashThemeSection from "../components/DashThemeSection.vue"
@@ -9,15 +8,10 @@
     import SaveDepSection from './SaveDepSection.vue';
     import { storeToRefs } from 'pinia'
     import { useDepsStore } from '@/stores/deps'
-    import { useUsersStore } from '@/stores/users'
-
-    const usersStore = useUsersStore()
-    const { userId, teamId, role } = storeToRefs(usersStore)
-    const { setUserFromDb } = usersStore
 
     const depsStore = useDepsStore()
-    const { depsList, addedDepsList } = storeToRefs(depsStore)
-    const { addNewDep, onSort, resetDeps, saveDepToDb } = depsStore
+    const { depsList } = storeToRefs(depsStore)
+    const { addNewDep, onSort, resetDeps } = depsStore
 
     // Sortable values
     const sortableInstance = ref({

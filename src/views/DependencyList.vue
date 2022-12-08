@@ -1,21 +1,35 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+    import { onMounted, computed } from 'vue'
     import { useRouter, RouterLink } from 'vue-router'
     import { storeToRefs } from 'pinia'
     import { useDepsStore } from '@/stores/deps'
     import { useUsersStore } from '@/stores/users'
 
     const usersStore = useUsersStore()
-    const { userId, teamId } = storeToRefs(usersStore)
-    const { setUserFromDb } = usersStore
+    // const { userId, teamId } = storeToRefs(usersStore)
+    let userId = computed(() => usersStore.userId)
+    let teamId = computed(() => usersStore.teamId)
 
     const depsStore = useDepsStore()
     const { depsList, allDepsList } = storeToRefs(depsStore)
     const { getAllSavedDeps } = depsStore
 
-    onMounted(() => {
-        if(userId.value && teamId.value) getAllSavedDeps(userId.value, teamId.value)
-    })
+    // window.addEventListener('team-id-update', e => {
+    //     console.log('Fired', teamId.value)
+    //     if(userId.value && teamId.value) getAllSavedDeps(userId.value, teamId.value)
+    // })
+
+    // if(userId.value && teamId.value) getAllSavedDeps(userId.value, teamId.value)
+    // onMounted(() => {
+    //     setTimeout(() => {
+    //         console.log('Dependency List Mounted', {
+    //             userId: userId.value,
+    //             teamId: teamId.value
+    //         })
+    //         if(userId.value && teamId.value) getAllSavedDeps(userId.value, teamId.value)
+    //     }, 1000)
+        
+    // })
 </script>
 
 <template>
