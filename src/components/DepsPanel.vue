@@ -3,20 +3,23 @@
     import { saveAs } from 'file-saver'
     import { ref } from "vue"
     import { BkColours, Themes } from "@/types"
+    import type { Dep } from '@/types'
     import { storeToRefs } from 'pinia'
     import { useOptionsStore } from '@/stores/options'
-    import { useDepsStore } from '@/stores/deps'
     import Tile from "../components/Tile.vue"
 
     const optionsStore = useOptionsStore()
     const { backgroundOption, customBackgroundOption, themeOption } = storeToRefs(optionsStore)
 
-    const depsStore = useDepsStore()
-    const { addedDepsList } = storeToRefs(depsStore)
-
     const depPanelArea = ref(null)
     const tileEls = ref([])
     const arrowEls = ref([])
+
+    const props = defineProps<{
+        depList: Dep[]
+        showScreenCaptureBtn: boolean
+        isThumbnailPreview: boolean
+    }>()
 
     // Get the background class for the dependencies panel
     const setBkColor = (col: BkColours) => {
@@ -34,7 +37,7 @@
 
     // Show a dependency arrow if there is more than one dependency and the when the dependency is not the last
     const showArrow = (index: number) => {
-        if (addedDepsList.value.length > 1 && index !== addedDepsList.value.length - 1) { 
+        if (props.depList.length > 1 && index !== props.depList.length - 1) { 
             return true
         }
         return false
@@ -70,19 +73,19 @@
 </script>
 
 <template>
-    <div ref="depPanelArea" class="deps-viewer" :class="setBkColor(backgroundOption)" :style="{ backgroundColor: customBackgroundOption }">
-        <div class="deps-viewer-empty" v-if="addedDepsList.length === 0">
+    <div ref="depPanelArea" :class="['deps-viewer', isThumbnailPreview && 'deps-viewer-thumbnail', setBkColor(backgroundOption)]" :style="{ backgroundColor: customBackgroundOption }">
+        <div class="deps-viewer-empty" v-if="depList.length === 0">
             <font-awesome-icon icon="fa-solid fa-diagram-next" size="7x" />
         </div>
-        <template v-for="(dep, index) in addedDepsList" :key="index">
+        <template v-for="(dep, index) in depList" :key="index">
             <template v-if="dep.added">
-                <Tile ref="tileEls" :id="dep.id" :title="dep.title" :statusMsg="dep.statusMsg" :statusColor="dep.statusColor" :supportMsg="dep.supportMsgs[dep.statusColor]" />
-                <div ref="arrowEls" v-if="showArrow(index)" class="deps-arrow" :class="themeOption === Themes.NetMinded ? 'deps-arrow-netminded' : 'deps-arrow-pti'">
+                <Tile ref="tileEls" :id="dep.id" :title="dep.title" :statusMsg="dep.statusMsg" :statusColor="dep.statusColor" :supportMsg="dep.supportMsgs[dep.statusColor]" :depList="depList" :isThumbnailPreview="isThumbnailPreview" />
+                <div ref="arrowEls" v-if="showArrow(index)" :class="[isThumbnailPreview ? 'deps-arrow-thumbnail' : 'deps-arrow', themeOption === Themes.NetMinded ? 'deps-arrow-netminded' : 'deps-arrow-pti']">
                     <font-awesome-icon icon="fa-solid fa-arrow-down" />
                 </div>
             </template>
         </template>
-        <div v-if="addedDepsList.length >= 1" class="screenshot-btn" @click="captureScreen" data-html2canvas-ignore="true"><font-awesome-icon icon="fa-solid fa-camera-retro" /></div>
+        <div v-if="(depList.length >= 1 && showScreenCaptureBtn)" class="screenshot-btn" @click="captureScreen" data-html2canvas-ignore="true"><font-awesome-icon icon="fa-solid fa-camera-retro" /></div>
     </div>
 </template>
 
@@ -93,6 +96,10 @@
         flex-direction: column;
         padding: 20px 40px;
         overflow-y: auto;
+    }
+
+    .deps-viewer-thumbnail {
+        height: 400px;
     }
 
     .deps-viewer-empty {
@@ -123,6 +130,13 @@
     .deps-arrow {
         font-size: 26px;
         padding: 15px 0 10px 0;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .deps-arrow-thumbnail {
+        font-size: 60%;
+        padding: 4% 0 3% 0;
         margin-left: auto;
         margin-right: auto;
     }

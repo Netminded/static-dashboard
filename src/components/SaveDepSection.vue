@@ -8,22 +8,36 @@
     const { userId, teamId, role } = storeToRefs(usersStore)
 
     const depsStore = useDepsStore()
-    const { depsList, addedDepsList } = storeToRefs(depsStore)
-    const { saveDepToDb } = depsStore
+    const { depsList, addedDepsList, depsName } = storeToRefs(depsStore)
+    const { saveDepToDb, updateDepInDb } = depsStore
 
-    const depName = ref('')
+    const props = defineProps<{
+        chainId: string | string[]
+    }>()
+
+    const depName = ref(depsName.value)
 
     const saveDep = () => {
         if(userId.value && role.value && teamId.value && depName.value.trim().length > 0) {
             saveDepToDb(userId.value, role.value, teamId.value, depName.value, JSON.stringify(depsList.value))
         }
     }
+
+    const updateDep = () => {
+        if(userId.value && role.value && teamId.value && props.chainId && depName.value.trim().length > 0) {
+            updateDepInDb(userId.value, role.value, teamId.value, props.chainId as string, depName.value, JSON.stringify(depsList.value))
+        }
+    }
+
 </script>
 
 <template>
     <div v-if="addedDepsList.length >= 1" class="save-dep-container">
         <input type="text" placeholder="Chain Name" required v-model="depName" />
-        <button :disabled="depName.trim().length <= 0" class="btn" :class="depsList.length === 0 && 'btn-below'" @click="saveDep">
+        <button v-if="chainId" :disabled="depName.trim().length <= 0" class="btn" :class="depsList.length === 0 && 'btn-below'" @click="updateDep">
+            Update Chain
+        </button>
+        <button v-else :disabled="depName.trim().length <= 0" class="btn" :class="depsList.length === 0 && 'btn-below'" @click="saveDep">
             Save Chain
         </button>
     </div>

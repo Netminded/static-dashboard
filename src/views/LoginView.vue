@@ -38,7 +38,7 @@
       <div class="login-icon">
         <font-awesome-icon icon="fa-regular fa-thumbs-up" size="3x" />
       </div>
-      <h1>Service Assurance<br/>Dashboard</h1>
+      <h1>NetPlaybook<br/>Dashboard</h1>
       <div>
         <input class="login-field" type="text" placeholder="Email Address" v-model="username" />
         <input class="login-field" type="password" placeholder="Password" v-model="password" />

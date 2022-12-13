@@ -9,8 +9,7 @@
     const optionsStore = useOptionsStore()
     const { toggleSupportMsg } = storeToRefs(optionsStore)
     const depsStore = useDepsStore()
-    const { depsList, depItem } = storeToRefs(depsStore)
-    const { updateDep, removeDep } = depsStore
+    const { depsList } = storeToRefs(depsStore)
 
     const props = defineProps<{
       index: number
@@ -58,79 +57,48 @@
     const supportMsgAmber = ref(supportMsgs.value.Amber)
     const supportMsgGreen = ref(supportMsgs.value.Green)
 
-    // Update the dependency status color 
-    const updateStatusColor = (color: DepStatusColors) => {
-        statusColor.value = color
-    }
-
     // Set the active status color status
     const showActive = (statusColor: DepStatusColors, color: DepStatusColors) => {
       return statusColor === color
-    }
-
-    // Check id a dependency item has been saved
-    const isAdded = (index: number) => {
-      return depItem.value(index).added
-    }
-
-    const updateSupport = (red: string, amber: string, green: string) => {
-      supportMsgs.value = {
-        Red: red,
-        Amber: amber,
-        Green: green,
-        Grey: ''
-      }
     }
 </script>
 
 <template>
   <div class="dep-list-item">
     <div class="dep-list-item-header">
-      <h6 class="dep-header-handle"><font-awesome-icon icon="fa-solid fa-grip-lines" />{{ title }}</h6>
+      <h6 class="dep-header-handle">{{ title }}</h6>
       <div class="dep-list-item-actions">
         <span>
           <font-awesome-icon v-if="expanded" icon="fa-solid fa-chevron-up" @click="expanded = !expanded" /> 
           <font-awesome-icon v-else icon="fa-solid fa-chevron-down" @click="expanded = !expanded" />
         </span>
-        <span><font-awesome-icon icon="fa-regular fa-trash-can" @click="removeDep(index)" /></span>
       </div>
     </div>
     <div v-if="expanded" class="dep-list-item-body">
       <div class="status-color-container">
-        <div class="color-option" @click="updateStatusColor(DepStatusColors.Green)">
+        <div class="color-option">
           <span class="color-circle"></span>
           <p><span v-if="showActive(statusColor, DepStatusColors.Green)" class="active-element"></span>{{ DepStatusColors.Green }}</p>
         </div>
-        <div class="color-option" @click="updateStatusColor(DepStatusColors.Amber)">
+        <div class="color-option">
           <span class="color-circle"></span>
           <p><span v-if="showActive(statusColor, DepStatusColors.Amber)" class="active-element"></span>{{ DepStatusColors.Amber }}</p>
         </div>
-        <div class="color-option" @click="updateStatusColor(DepStatusColors.Red)">
+        <div class="color-option">
           <span class="color-circle"></span>
           <p><span v-if="showActive(statusColor, DepStatusColors.Red)" class="active-element"></span>{{ DepStatusColors.Red }}</p>
         </div>
-        <div class="color-option" @click="updateStatusColor(DepStatusColors.Default)">
+        <div class="color-option">
           <span class="color-circle"></span>
           <p><span v-if="showActive(statusColor, DepStatusColors.Default)" class="active-element"></span>{{ DepStatusColors.Default }}</p>
         </div>
       </div>
-      <input type="text" placeholder="Title" required v-model="title" />
-      <input name="depStatusMsg" type="text" placeholder="Status Message" required v-model="statusMsg" />
-      <p>{{ 60 - statusMsg.length }}/60 Characters Remaining</p>
+      <input type="text" placeholder="Title" required v-model="title" disabled />
+      <input name="depStatusMsg" type="text" placeholder="Status Message" required v-model="statusMsg" disabled />
       <div class="support-msg-input-container" v-if="toggleSupportMsg">
-        <textarea row="1" type="text" placeholder="Green Status Support Message" v-model="supportMsgGreen"></textarea>
-        <textarea row="1" type="text" placeholder="Amber Status Support Message" v-model="supportMsgAmber"></textarea>
-        <textarea row="1" type="text" placeholder="Red Status Support Message" v-model="supportMsgRed"></textarea>
-      </div>
-      <div class="btn-container">
-        <button
-        type="button"
-        class="btn"
-        :disabled="statusMsg.length <= 0 || statusMsg.length > 60 || title.length <= 0"
-        @click="expanded = !expanded, updateSupport(supportMsgRed, supportMsgAmber, supportMsgGreen), updateDep(index, title, statusMsg, statusColor, true, expanded, supportMsgs, false)"
-        >
-        {{ isAdded(index) ? 'Update' : 'Add'}}
-      </button>
+        <textarea row="1" type="text" placeholder="Green Status Support Message" v-model="supportMsgGreen" disabled ></textarea>
+        <textarea row="1" type="text" placeholder="Amber Status Support Message" v-model="supportMsgAmber" disabled ></textarea>
+        <textarea row="1" type="text" placeholder="Red Status Support Message" v-model="supportMsgRed" disabled ></textarea>
       </div>
     </div>
   </div>
@@ -150,11 +118,6 @@
 }
 .dep-list-item-header {
   display: flex;
-  cursor: move;
-}
-
-.dep-list-item-header .fa-grip-lines {
-  padding-right: 8px;
 }
 
 h6 {
@@ -239,10 +202,6 @@ h6 {
   box-shadow: 0px 0px 14px rgba(33, 48, 79, 0.25);
 }
 
-.status-color-container .color-option {
-  cursor: pointer;
-}
-
 .status-color-container .color-option:first-child .color-circle {
   background: linear-gradient(90deg, #77df81 0%, #4ea43d 100%);
 }
@@ -261,36 +220,5 @@ h6 {
 
 .support-msg-input-container {
   padding-top: 20px;
-}
-
-.btn-container {
-  margin-left: auto;
-  text-align: right;
-}
-
-.btn {
-  background: #0d6af6;
-  border: 0 solid transparent;
-  border-radius: 50px;
-  box-shadow: 0 4px 16px rgb(32 19 104 / 25%);
-  color: #fff;
-  font-family: "Poppins", sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  padding: 10px 20px;
-  text-transform: uppercase;
-  transition-timing-function: ease-in;
-  transition: 0.5s;
-  margin-top: 20px;
-  cursor: pointer;
-}
-
-.btn:hover {
-  background: #0c54c0;
-}
-
-.btn:disabled {
-  background: #4c4d55;
-  cursor: not-allowed;
 }
 </style>

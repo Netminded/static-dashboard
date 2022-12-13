@@ -26,7 +26,7 @@
       width="160"
       height="28"
     />
-    <router-link v-if="user.loggedIn" to="/">Diagnostic Chains</router-link>
+    <router-link class="nav-link" v-if="user.loggedIn" to="/">Diagnostic Chains</router-link>
     </div>
     <div>
       <p v-if="fullName" class="user-name">{{fullName}}</p>
@@ -51,6 +51,12 @@ nav {
   nav .logo {
     width: 130px;
   }
+}
+
+.nav-link {
+  position: relative;
+  top: -7px;
+  margin-left: 30px;
 }
 
 .user-name {

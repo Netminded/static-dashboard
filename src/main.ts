@@ -5,26 +5,19 @@ import router from "./router"
 
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
-import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons"
-import { faDiagramNext } from "@fortawesome/free-solid-svg-icons"
-import { faPlus } from "@fortawesome/free-solid-svg-icons"
-import { faChevronUp } from "@fortawesome/free-solid-svg-icons"
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons"
-import { faGripLines } from "@fortawesome/free-solid-svg-icons"
-import { faArrowDown } from "@fortawesome/free-solid-svg-icons"
-import { faGhost } from "@fortawesome/free-solid-svg-icons"
-import { faCameraRetro } from "@fortawesome/free-solid-svg-icons"
-import { faRotateLeft } from "@fortawesome/free-solid-svg-icons"
-import { faHeadset } from "@fortawesome/free-solid-svg-icons"
-import { faThumbsUp } from "@fortawesome/free-regular-svg-icons"
-import { faHand } from "@fortawesome/free-regular-svg-icons"
-import { faTrashCan } from "@fortawesome/free-regular-svg-icons"
+import { faArrowRightFromBracket, faDiagramNext, faPlus, faChevronUp, faChevronRight, faChevronDown, faChevronLeft, 
+  faGripLines, faArrowDown, faGhost, faCameraRetro, faRotateLeft, faHeadset, faXmark } from "@fortawesome/free-solid-svg-icons"
+
+import { faThumbsUp, faHand, faTrashCan, faPenToSquare } from "@fortawesome/free-regular-svg-icons"
+
 library.add(
   faArrowRightFromBracket,
   faDiagramNext,
   faPlus,
   faChevronUp,
+  faChevronRight,
   faChevronDown,
+  faChevronLeft,
   faGripLines,
   faArrowDown,
   faGhost,
@@ -33,7 +26,9 @@ library.add(
   faHeadset,
   faThumbsUp,
   faHand,
-  faTrashCan
+  faTrashCan, 
+  faPenToSquare,
+  faXmark
 )
 
 import "./assets/main.css"

@@ -13,6 +13,10 @@
     const { depsList } = storeToRefs(depsStore)
     const { addNewDep, onSort, resetDeps } = depsStore
 
+    const props = defineProps<{
+        chainId: string | string[]
+    }>()
+
     // Sortable values
     const sortableInstance = ref({
         animation: 150,
@@ -44,7 +48,7 @@
                 <font-awesome-icon icon="fa-solid fa-rotate-left" />Reset
             </button>
         </div>
-        <SaveDepSection />
+        <SaveDepSection :chainId="chainId" />
     </div>
 </template>
 

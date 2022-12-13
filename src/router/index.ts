@@ -3,6 +3,7 @@ import LoginView from "../views/LoginView.vue"
 import ResetPasswordView from "../views/ResetPasswordView.vue"
 import SetPasswordView from "../views/SetPasswordView.vue"
 import DesignView from "../views/DesignView.vue"
+import DesignPreview from "@/views/DesignPreview.vue"
 import DependencyList from "../views/DependencyList.vue"
 import NotFound from "../views/NotFound.vue"
 import { authedUser } from '@/firebase/firebaseConfig'
@@ -23,6 +24,22 @@ const router = createRouter({
       path: "/design",
       name: "design",
       component: DesignView,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: "/design/:id/edit",
+      name: "design-edit",
+      component: DesignView,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: "/design/:id/view",
+      name: "design-view",
+      component: DesignPreview,
       meta: {
         requiresAuth: true
       }
