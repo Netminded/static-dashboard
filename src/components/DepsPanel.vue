@@ -79,7 +79,7 @@
         </div>
         <template v-for="(dep, index) in depList" :key="index">
             <template v-if="dep.added">
-                <Tile ref="tileEls" :id="dep.id" :title="dep.title" :statusMsg="dep.statusMsg" :statusColor="dep.statusColor" :supportMsg="dep.supportMsgs[dep.statusColor]" :depList="depList" :isThumbnailPreview="isThumbnailPreview" />
+                <Tile ref="tileEls" :id="dep.id" :title="dep.title" :statusMsg="dep.statusMsg" :statusColor="dep.statusColor" :supportMsg="dep.supportMsgs[dep.statusColor]" :thirdPartyItem="dep.thirdPartyItem" :depList="depList" :isThumbnailPreview="isThumbnailPreview" />
                 <div ref="arrowEls" v-if="showArrow(index)" :class="[isThumbnailPreview ? 'deps-arrow-thumbnail' : 'deps-arrow', themeOption === Themes.NetMinded ? 'deps-arrow-netminded' : 'deps-arrow-pti']">
                     <font-awesome-icon icon="fa-solid fa-arrow-down" />
                 </div>

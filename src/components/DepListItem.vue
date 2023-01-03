@@ -20,7 +20,7 @@
 
     const getDate = () => {
         const date = new Date(props.timestamp)
-        return `${date.getUTCDay()}/${date.getUTCMonth()}/${date.getUTCFullYear()}`
+        return `${date.getUTCDay() + 1}/${date.getUTCMonth() + 1}/${date.getUTCFullYear()}`
     }
 
 </script>

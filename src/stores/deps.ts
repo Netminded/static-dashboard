@@ -25,6 +25,7 @@ export const useDepsStore = defineStore("deps", () => {
             [DepStatusColors.Default]: '',
         },
         supportExpanded: false,
+        thirdPartyItem: false
     }
 
     const depsList = ref<Dep[]>([])
@@ -69,8 +70,9 @@ export const useDepsStore = defineStore("deps", () => {
         added: boolean, 
         expanded: boolean, 
         supportMsgs: SupportMsgs, 
-        supportExpanded: boolean) => {
-        depsList.value[index] = {...depsList.value[index], title, statusMsg, statusColor, added, expanded, supportMsgs, supportExpanded}
+        supportExpanded: boolean, 
+        thirdPartyItem: boolean) => {
+        depsList.value[index] = {...depsList.value[index], title, statusMsg, statusColor, added, expanded, supportMsgs, supportExpanded, thirdPartyItem}
     }
 
     const updateDepsList = (deps: Dep[]) => {

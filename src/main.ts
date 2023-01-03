@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 import { faArrowRightFromBracket, faDiagramNext, faPlus, faChevronUp, faChevronRight, faChevronDown, faChevronLeft, 
   faGripLines, faArrowDown, faGhost, faCameraRetro, faRotateLeft, faHeadset, faXmark } from "@fortawesome/free-solid-svg-icons"
 
-import { faThumbsUp, faHand, faTrashCan, faPenToSquare } from "@fortawesome/free-regular-svg-icons"
+import { faThumbsUp, faHand, faTrashCan, faPenToSquare, faShareFromSquare } from "@fortawesome/free-regular-svg-icons"
 
 library.add(
   faArrowRightFromBracket,
@@ -28,7 +28,8 @@ library.add(
   faHand,
   faTrashCan, 
   faPenToSquare,
-  faXmark
+  faXmark, 
+  faShareFromSquare
 )
 
 import "./assets/main.css"

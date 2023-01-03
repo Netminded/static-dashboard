@@ -23,9 +23,6 @@
     }
 
     // If the dependency values exist in the local store update the value
-    // const isInArray = (index: number) => {
-    //   return typeof depsList.value[index] !== undefined ? true : false
-    // }
 
     const setTitle = (index: number) => {
       return isInArray(index, depsList.value) ? depsList.value[index].title : ""
@@ -47,6 +44,10 @@
       return isInArray(index, depsList.value) ? depsList.value[index].supportMsgs : defaultSupportMsgs
     }
 
+    const setThirdPartyToggle = (index: number) => {
+      return isInArray(index, depsList.value) ? depsList.value[index].thirdPartyItem : false
+    }
+
     //Initialse the dependency values to either a default or what is in the store for persistence on refresh
     const title = ref(setTitle(props.index))
     const statusMsg = ref(setStatusMsg(props.index))
@@ -56,6 +57,7 @@
     const supportMsgRed = ref(supportMsgs.value.Red)
     const supportMsgAmber = ref(supportMsgs.value.Amber)
     const supportMsgGreen = ref(supportMsgs.value.Green)
+    const toggleThirdParty = ref(setThirdPartyToggle(props.index))
 
     // Set the active status color status
     const showActive = (statusColor: DepStatusColors, color: DepStatusColors) => {
@@ -99,6 +101,9 @@
         <textarea row="1" type="text" placeholder="Green Status Support Message" v-model="supportMsgGreen" disabled ></textarea>
         <textarea row="1" type="text" placeholder="Amber Status Support Message" v-model="supportMsgAmber" disabled ></textarea>
         <textarea row="1" type="text" placeholder="Red Status Support Message" v-model="supportMsgRed" disabled ></textarea>
+      </div>
+      <div v-if="toggleThirdParty" class="third-party-container">
+          <p class="third-party-text"><font-awesome-icon icon="fa-regular fa-share-from-square" /> Partner Service</p>
       </div>
     </div>
   </div>
@@ -160,12 +165,7 @@ h6 {
 .dep-list-item-body input::placeholder, .dep-list-item-body textarea::placeholder {
   color: #0c0c0c;
 }
-.dep-list-item-body p {
-  font-size: 14px;
-  font-family: "Karla";
-  text-align: right;
-  margin-top: 10px;
-}
+
 .status-color-container {
   margin-top: 20px;
   margin-bottom: 15px;
@@ -220,5 +220,25 @@ h6 {
 
 .support-msg-input-container {
   padding-top: 20px;
+}
+
+.third-party-container {
+  margin-top: 20px;
+}
+
+.third-party-text {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-family: "Karla", sans-serif;
+  font-weight: 500;
+  color: #4c4d55;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.fa-share-from-square {
+  font-size: 16px;
+  margin-right: 5px;
+  transform: scaleX(-1);
 }
 </style>

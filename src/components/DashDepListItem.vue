@@ -24,9 +24,6 @@
     }
 
     // If the dependency values exist in the local store update the value
-    // const isInArray = (index: number) => {
-    //   return typeof depsList.value[index] !== undefined ? true : false
-    // }
 
     const setTitle = (index: number) => {
       return isInArray(index, depsList.value) ? depsList.value[index].title : ""
@@ -48,6 +45,10 @@
       return isInArray(index, depsList.value) ? depsList.value[index].supportMsgs : defaultSupportMsgs
     }
 
+    const setThirdPartyToggle = (index: number) => {
+      return isInArray(index, depsList.value) ? depsList.value[index].thirdPartyItem : false
+    }
+
     //Initialse the dependency values to either a default or what is in the store for persistence on refresh
     const title = ref(setTitle(props.index))
     const statusMsg = ref(setStatusMsg(props.index))
@@ -57,6 +58,7 @@
     const supportMsgRed = ref(supportMsgs.value.Red)
     const supportMsgAmber = ref(supportMsgs.value.Amber)
     const supportMsgGreen = ref(supportMsgs.value.Green)
+    const toggleThirdParty = ref(setThirdPartyToggle(props.index))
 
     // Update the dependency status color 
     const updateStatusColor = (color: DepStatusColors) => {
@@ -116,18 +118,25 @@
       </div>
       <input type="text" placeholder="Title" required v-model="title" />
       <input name="depStatusMsg" type="text" placeholder="Status Message" required v-model="statusMsg" />
-      <p>{{ 60 - statusMsg.length }}/60 Characters Remaining</p>
+      <p class="char-text">{{ 60 - statusMsg.length }}/60 Characters Remaining</p>
       <div class="support-msg-input-container" v-if="toggleSupportMsg">
         <textarea row="1" type="text" placeholder="Green Status Support Message" v-model="supportMsgGreen"></textarea>
         <textarea row="1" type="text" placeholder="Amber Status Support Message" v-model="supportMsgAmber"></textarea>
         <textarea row="1" type="text" placeholder="Red Status Support Message" v-model="supportMsgRed"></textarea>
       </div>
       <div class="btn-container">
+        <div class="third-party-container">
+          <p class="third-party-text"><font-awesome-icon icon="fa-regular fa-share-from-square" /> Partner Service</p>
+          <label class="switch">
+              <input type="checkbox" :checked="toggleThirdParty" @click="toggleThirdParty = !toggleThirdParty">
+              <span class="slider round"></span>
+          </label>
+        </div>
         <button
         type="button"
         class="btn"
         :disabled="statusMsg.length <= 0 || statusMsg.length > 60 || title.length <= 0"
-        @click="expanded = !expanded, updateSupport(supportMsgRed, supportMsgAmber, supportMsgGreen), updateDep(index, title, statusMsg, statusColor, true, expanded, supportMsgs, false)"
+        @click="expanded = !expanded, updateSupport(supportMsgRed, supportMsgAmber, supportMsgGreen), updateDep(index, title, statusMsg, statusColor, true, expanded, supportMsgs, false, toggleThirdParty)"
         >
         {{ isAdded(index) ? 'Update' : 'Add'}}
       </button>
@@ -197,7 +206,7 @@ h6 {
 .dep-list-item-body input::placeholder, .dep-list-item-body textarea::placeholder {
   color: #0c0c0c;
 }
-.dep-list-item-body p {
+.dep-list-item-body .char-text {
   font-size: 14px;
   font-family: "Karla";
   text-align: right;
@@ -259,13 +268,94 @@ h6 {
   background: linear-gradient(90deg, #afb1c0 0%, #8f9fae 100%);
 }
 
+.third-party-text {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-family: "Karla", sans-serif;
+  font-weight: 500;
+  color: #4c4d55;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.fa-share-from-square {
+  font-size: 16px;
+  margin-right: 5px;
+  transform: scaleX(-1);
+}
+
+.switch {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  width: 48px;
+  height: 22px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #CCCCCC;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 2px;
+  background-color: #FFFFFF;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #0d6af7;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #0d6af7;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(21px);
+  -ms-transform: translateX(21px);
+  transform: translateX(21px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 34px;
+}
+
 .support-msg-input-container {
   padding-top: 20px;
 }
 
 .btn-container {
-  margin-left: auto;
-  text-align: right;
+  display: flex;
+  justify-content: space-between;
+}
+
+.third-party-container {
+  position: relative;
+  top: 8px;
 }
 
 .btn {

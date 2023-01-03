@@ -6,7 +6,8 @@ export interface Dep {
     added: boolean,
     expanded: boolean,
     supportMsgs: SupportMsgs,
-    supportExpanded: boolean
+    supportExpanded: boolean,
+    thirdPartyItem: boolean
 }
 
 export interface Deps {

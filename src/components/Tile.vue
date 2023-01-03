@@ -18,6 +18,7 @@
         statusMsg: string
         statusColor: DepStatusColors
         supportMsg: string
+        thirdPartyItem: boolean
         depList: Dep[]
         isThumbnailPreview: boolean
     }>()
@@ -51,7 +52,7 @@
 <template>
     <div :class="[isThumbnailPreview ? 'tile-thumbnail' : 'tile', themeOption === Themes.NetMinded ? 'tile-netminded' : 'tile-pti']">
         <div :class="[isThumbnailPreview ? 'tile-header-thumbnail' : 'tile-header', themeOption === Themes.NetMinded ? 'tile-header-netminded' : '', setHeaderColor(statusColor)]">
-            <h5 :class="themeOption === Themes.NetMinded ? 'title-netminded' : 'title-pti'">{{ truncateTxt(title, 30) }}</h5>
+            <h5 :class="themeOption === Themes.NetMinded ? 'title-netminded' : 'title-pti'"><font-awesome-icon v-if="thirdPartyItem" icon="fa-regular fa-share-from-square" />{{ truncateTxt(title, 30) }}</h5>
         </div>
         <div :class="[isThumbnailPreview ? 'tile-body-thumbnail' : 'tile-body', themeOption === Themes.NetMinded ? 'tile-body-netminded' : 'tile-body-pti']">
             <p>{{ truncateTxt(statusMsg, 60) }}</p>
@@ -133,10 +134,23 @@
     font-size: 20px;
 }
 
+.tile-header .fa-share-from-square {
+    margin-right: 7px;
+    transform: scaleX(-1);
+}
+
 .tile-header-thumbnail h5 {
     color: #ffffff;
     font-weight: 800;
     font-size: 50%;
+}
+
+.tile-header-thumbnail .fa-share-from-square {
+    font-size: 70%;
+    transform: scaleX(-1);
+    margin-right: 3px;
+    position: relative;
+    bottom: 1px;
 }
 
 .title-netminded {
