@@ -1,10 +1,13 @@
 <script setup lang="ts">
-    import { ref } from "vue"
+    import { ref, onMounted } from "vue"
     import { DepStatusColors } from "@/types"
     import { storeToRefs } from 'pinia'
     import { useOptionsStore } from '@/stores/options'
     import { useDepsStore } from '@/stores/deps'
     import { isInArray } from "@/utilities/utils"
+    import Swal from 'sweetalert2'
+    import  Quill from 'quill'
+    import 'quill/dist/quill.snow.css'
 
     const optionsStore = useOptionsStore()
     const { toggleSupportMsg } = storeToRefs(optionsStore)
@@ -21,6 +24,14 @@
       [DepStatusColors.Amber]: '',
       [DepStatusColors.Green]: '',
       [DepStatusColors.Default]: ''
+    }
+
+    const defaultDepInfo = {
+      q1: '',
+      q2: '',
+      q3: '',
+      q4: '',
+      q5: ''
     }
 
     // If the dependency values exist in the local store update the value
@@ -49,6 +60,10 @@
       return isInArray(index, depsList.value) ? depsList.value[index].thirdPartyItem : false
     }
 
+    const setDepInfo = (index: number) => {
+      return isInArray(index, depsList.value) ? depsList.value[index].depInfo : defaultDepInfo
+    }
+
     //Initialse the dependency values to either a default or what is in the store for persistence on refresh
     const title = ref(setTitle(props.index))
     const statusMsg = ref(setStatusMsg(props.index))
@@ -59,6 +74,12 @@
     const supportMsgAmber = ref(supportMsgs.value.Amber)
     const supportMsgGreen = ref(supportMsgs.value.Green)
     const toggleThirdParty = ref(setThirdPartyToggle(props.index))
+    const depInfo = ref(setDepInfo(props.index))
+    const depInfoQ1 = ref(depInfo.value.q1)
+    const depInfoQ2 = ref(depInfo.value.q2)
+    const depInfoQ3 = ref(depInfo.value.q3)
+    const depInfoQ4 = ref(depInfo.value.q4)
+    const depInfoQ5 = ref(depInfo.value.q5)
 
     // Update the dependency status color 
     const updateStatusColor = (color: DepStatusColors) => {
@@ -82,6 +103,81 @@
         Green: green,
         Grey: ''
       }
+    }
+
+    const updateDepInfo = (depInfoQ1: string, depInfoQ2: string, depInfoQ3: string, depInfoQ4: string, depInfoQ5: string) => {
+      depInfo.value = {
+        q1: depInfoQ1,
+        q2: depInfoQ2,
+        q3: depInfoQ3,
+        q4: depInfoQ4,
+        q5: depInfoQ5
+      }
+      console.log(depInfo.value)
+    }
+
+    const openEditor = () => {
+      let editor1: Quill, editor2: Quill, editor3: Quill, editor4: Quill, editor5: Quill
+      Swal.fire({
+        title: 'Diagnostic Item Info',
+        html:
+          '<h3>Item Purpose</h3>' +
+          '<div class="q1Editor"></div>' +
+          '<h3>Item Owner</h3>' +
+          '<div class="q2Editor"></div>' +
+          '<h3>Item Source</h3>' +
+          '<div class="q3Editor"></div>' +
+          '<h3>Item History</h3>' +
+          '<div class="q4Editor"></div>' +
+          '<h3>Item Notes</h3>' +
+          '<div class="q5Editor"></div>',
+        showCloseButton: true,
+        showCancelButton: true,
+        focusConfirm: false,
+        confirmButtonText: 'Save Info',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        didOpen: () => {
+          editor1 = new Quill('.q1Editor', {
+            theme: 'snow',
+            placeholder: 'What is the purpose of this item? Which stakeholder group or groups is it relevant to?'
+          })
+          if(depInfoQ1.value.length !== 0) editor1.setContents(JSON.parse(depInfoQ1.value))
+          editor1.on('text-change', () => {
+            depInfoQ1.value = JSON.stringify(editor1.getContents())
+            console.log(depInfoQ1.value)
+          })
+          editor2 = new Quill('.q2Editor', {
+            theme: 'snow',
+            placeholder: 'Who is the owner of this item? Who is the technical lead or point of contact for this item?'
+          })
+          if(depInfoQ2.value.length !== 0) editor2.setContents(JSON.parse(depInfoQ2.value))
+          editor3 = new Quill('.q3Editor', {
+            theme: 'snow',
+            placeholder: 'Where does this item come from? Are there any technical integrations, API\'s etc needed to utilise this item?'
+          })
+          if(depInfoQ3.value.length !== 0) editor3.setContents(JSON.parse(depInfoQ3.value))
+          editor4 = new Quill('.q4Editor', {
+            theme: 'snow',
+            placeholder: 'What is the latest version of this item? Have there been previous versions or revisions?'
+          })
+          if(depInfoQ4.value.length !== 0) editor4.setContents(JSON.parse(depInfoQ4.value))
+          editor5 = new Quill('.q5Editor', {
+            theme: 'snow',
+            placeholder: 'Any other information relevant to this item...'
+          })
+          if(depInfoQ5.value.length !== 0) editor5.setContents(JSON.parse(depInfoQ5.value))
+        }
+      }).then((result) => {
+        if(result.isConfirmed) {
+          // depInfoQ1.value = JSON.stringify(editor1.getContents())
+          depInfoQ2.value = JSON.stringify(editor2.getContents())
+          depInfoQ3.value = JSON.stringify(editor3.getContents())
+          depInfoQ4.value = JSON.stringify(editor4.getContents())
+          depInfoQ5.value = JSON.stringify(editor5.getContents())
+        }
+      })
     }
 </script>
 
@@ -117,8 +213,13 @@
         </div>
       </div>
       <input type="text" placeholder="Title" required v-model="title" />
-      <input name="depStatusMsg" type="text" placeholder="Status Message" required v-model="statusMsg" />
-      <p class="char-text">{{ 60 - statusMsg.length }}/60 Characters Remaining</p>
+      <input class="dep-status-input" name="depStatusMsg" type="text" placeholder="Status Message" required v-model="statusMsg" />
+      <p class="char-text">{{ 60 - statusMsg.length }}/60</p>
+      <div class="dep-actions">
+        <button class="btn btn-secondary" @click="openEditor">
+          <font-awesome-icon icon="fa-regular fa-file-lines"/>Manage Info
+        </button>
+      </div>
       <div class="support-msg-input-container" v-if="toggleSupportMsg">
         <textarea row="1" type="text" placeholder="Green Status Support Message" v-model="supportMsgGreen"></textarea>
         <textarea row="1" type="text" placeholder="Amber Status Support Message" v-model="supportMsgAmber"></textarea>
@@ -133,13 +234,14 @@
           </label>
         </div>
         <button
-        type="button"
-        class="btn"
-        :disabled="statusMsg.length <= 0 || statusMsg.length > 60 || title.length <= 0"
-        @click="expanded = !expanded, updateSupport(supportMsgRed, supportMsgAmber, supportMsgGreen), updateDep(index, title, statusMsg, statusColor, true, expanded, supportMsgs, false, toggleThirdParty)"
-        >
-        {{ isAdded(index) ? 'Update' : 'Add'}}
-      </button>
+          type="button"
+          class="btn"
+          :disabled="statusMsg.length > 60 || title.length <= 0"
+          @click="expanded = !expanded, updateSupport(supportMsgRed, supportMsgAmber, supportMsgGreen), 
+          updateDepInfo(depInfoQ1, depInfoQ2, depInfoQ3, depInfoQ4, depInfoQ5), updateDep(index, title, statusMsg, statusColor, true, expanded, supportMsgs, false, toggleThirdParty, depInfo)"
+          >
+          {{ isAdded(index) ? 'Update' : 'Add'}}
+        </button>
       </div>
     </div>
   </div>
@@ -206,11 +308,19 @@ h6 {
 .dep-list-item-body input::placeholder, .dep-list-item-body textarea::placeholder {
   color: #0c0c0c;
 }
+.dep-status-input {
+  padding-right: 50px !important;
+}
+
 .dep-list-item-body .char-text {
   font-size: 14px;
   font-family: "Karla";
+  color: #4c4d55;
   text-align: right;
-  margin-top: 10px;
+  margin-left: auto;
+  margin-top: -32px;
+  width: 50px;
+  padding-left: 5px;
 }
 .status-color-container {
   margin-top: 20px;
@@ -382,5 +492,23 @@ input:checked + .slider:before {
 .btn:disabled {
   background: #4c4d55;
   cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 0 solid transparent;
+  color: #0d6af6;
+  padding: 10px 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.btn-secondary:hover {
+  background: transparent;
+  color: #0c54c0;
+}
+
+.fa-file-lines {
+  margin-right: 5px;
 }
 </style>

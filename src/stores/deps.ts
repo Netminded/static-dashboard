@@ -2,7 +2,7 @@ import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import { v4 as uuidv4 } from 'uuid'
 import { DepStatusColors } from "@/types"
-import type { Dep, Deps, SupportMsgs } from "@/types"
+import type { Dep, Deps, SupportMsgs, DepInfo } from "@/types"
 import { database } from "../firebase/firebaseConfig"
 import { ref as fbRef, onValue, push, remove, update } from "firebase/database";
 import Swal from 'sweetalert2'
@@ -25,7 +25,14 @@ export const useDepsStore = defineStore("deps", () => {
             [DepStatusColors.Default]: '',
         },
         supportExpanded: false,
-        thirdPartyItem: false
+        thirdPartyItem: false,
+        depInfo: {
+            q1: '',
+            q2: '',
+            q3: '',
+            q4: '',
+            q5: ''
+        }
     }
 
     const depsList = ref<Dep[]>([])
@@ -71,8 +78,9 @@ export const useDepsStore = defineStore("deps", () => {
         expanded: boolean, 
         supportMsgs: SupportMsgs, 
         supportExpanded: boolean, 
-        thirdPartyItem: boolean) => {
-        depsList.value[index] = {...depsList.value[index], title, statusMsg, statusColor, added, expanded, supportMsgs, supportExpanded, thirdPartyItem}
+        thirdPartyItem: boolean,
+        depInfo: DepInfo) => {
+        depsList.value[index] = {...depsList.value[index], title, statusMsg, statusColor, added, expanded, supportMsgs, supportExpanded, thirdPartyItem, depInfo}
     }
 
     const updateDepsList = (deps: Dep[]) => {

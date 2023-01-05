@@ -7,7 +7,8 @@ export interface Dep {
     expanded: boolean,
     supportMsgs: SupportMsgs,
     supportExpanded: boolean,
-    thirdPartyItem: boolean
+    thirdPartyItem: boolean,
+    depInfo: DepInfo
 }
 
 export interface Deps {
@@ -42,4 +43,12 @@ export interface SupportMsgs {
     [DepStatusColors.Amber]: string,
     [DepStatusColors.Green]: string,
     [DepStatusColors.Default]: string
+}
+
+export interface DepInfo {
+    q1: string,
+    q2: string,
+    q3: string,
+    q4: string,
+    q5: string
 }
