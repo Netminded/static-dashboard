@@ -35,6 +35,7 @@ VITE_FB_PROJECT_ID=""
 VITE_FB_STORAGE_BUCKET=""
 VITE_FB_MESSAGE_SENDER_ID=""
 VITE_FB_APP_ID=""
+VITE_FB_DATABASE_URL
 ```
 
 ### Compile and Hot-Reload for Development

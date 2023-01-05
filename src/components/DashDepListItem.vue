@@ -75,11 +75,6 @@
     const supportMsgGreen = ref(supportMsgs.value.Green)
     const toggleThirdParty = ref(setThirdPartyToggle(props.index))
     const depInfo = ref(setDepInfo(props.index))
-    const depInfoQ1 = ref(depInfo.value.q1)
-    const depInfoQ2 = ref(depInfo.value.q2)
-    const depInfoQ3 = ref(depInfo.value.q3)
-    const depInfoQ4 = ref(depInfo.value.q4)
-    const depInfoQ5 = ref(depInfo.value.q5)
 
     // Update the dependency status color 
     const updateStatusColor = (color: DepStatusColors) => {
@@ -105,17 +100,6 @@
       }
     }
 
-    const updateDepInfo = (depInfoQ1: string, depInfoQ2: string, depInfoQ3: string, depInfoQ4: string, depInfoQ5: string) => {
-      depInfo.value = {
-        q1: depInfoQ1,
-        q2: depInfoQ2,
-        q3: depInfoQ3,
-        q4: depInfoQ4,
-        q5: depInfoQ5
-      }
-      console.log(depInfo.value)
-    }
-
     const openEditor = () => {
       let editor1: Quill, editor2: Quill, editor3: Quill, editor4: Quill, editor5: Quill
       Swal.fire({
@@ -132,50 +116,49 @@
           '<h3>Item Notes</h3>' +
           '<div class="q5Editor"></div>',
         showCloseButton: true,
-        showCancelButton: true,
-        focusConfirm: false,
-        confirmButtonText: 'Save Info',
-        cancelButtonText: 'Cancel',
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
+        showCancelButton: false,
+        showConfirmButton: false,
         didOpen: () => {
           editor1 = new Quill('.q1Editor', {
             theme: 'snow',
             placeholder: 'What is the purpose of this item? Which stakeholder group or groups is it relevant to?'
           })
-          if(depInfoQ1.value.length !== 0) editor1.setContents(JSON.parse(depInfoQ1.value))
+          if(depInfo.value.q1.length !== 0) editor1.setContents(JSON.parse(depInfo.value.q1))
           editor1.on('text-change', () => {
-            depInfoQ1.value = JSON.stringify(editor1.getContents())
-            console.log(depInfoQ1.value)
+            depInfo.value.q1 = JSON.stringify(editor1.getContents())
           })
           editor2 = new Quill('.q2Editor', {
             theme: 'snow',
             placeholder: 'Who is the owner of this item? Who is the technical lead or point of contact for this item?'
           })
-          if(depInfoQ2.value.length !== 0) editor2.setContents(JSON.parse(depInfoQ2.value))
+          if(depInfo.value.q2.length !== 0) editor2.setContents(JSON.parse(depInfo.value.q2))
+          editor2.on('text-change', () => {
+            depInfo.value.q2 = JSON.stringify(editor2.getContents())
+          })
           editor3 = new Quill('.q3Editor', {
             theme: 'snow',
             placeholder: 'Where does this item come from? Are there any technical integrations, API\'s etc needed to utilise this item?'
           })
-          if(depInfoQ3.value.length !== 0) editor3.setContents(JSON.parse(depInfoQ3.value))
+          if(depInfo.value.q3.length !== 0) editor3.setContents(JSON.parse(depInfo.value.q3))
+          editor3.on('text-change', () => {
+            depInfo.value.q3 = JSON.stringify(editor3.getContents())
+          })
           editor4 = new Quill('.q4Editor', {
             theme: 'snow',
             placeholder: 'What is the latest version of this item? Have there been previous versions or revisions?'
           })
-          if(depInfoQ4.value.length !== 0) editor4.setContents(JSON.parse(depInfoQ4.value))
+          if(depInfo.value.q4.length !== 0) editor4.setContents(JSON.parse(depInfo.value.q4))
+          editor4.on('text-change', () => {
+            depInfo.value.q4 = JSON.stringify(editor4.getContents())
+          })
           editor5 = new Quill('.q5Editor', {
             theme: 'snow',
             placeholder: 'Any other information relevant to this item...'
           })
-          if(depInfoQ5.value.length !== 0) editor5.setContents(JSON.parse(depInfoQ5.value))
-        }
-      }).then((result) => {
-        if(result.isConfirmed) {
-          // depInfoQ1.value = JSON.stringify(editor1.getContents())
-          depInfoQ2.value = JSON.stringify(editor2.getContents())
-          depInfoQ3.value = JSON.stringify(editor3.getContents())
-          depInfoQ4.value = JSON.stringify(editor4.getContents())
-          depInfoQ5.value = JSON.stringify(editor5.getContents())
+          if(depInfo.value.q5.length !== 0) editor5.setContents(JSON.parse(depInfo.value.q5))
+          editor5.on('text-change', () => {
+            depInfo.value.q5 = JSON.stringify(editor5.getContents())
+          })
         }
       })
     }
@@ -238,7 +221,7 @@
           class="btn"
           :disabled="statusMsg.length > 60 || title.length <= 0"
           @click="expanded = !expanded, updateSupport(supportMsgRed, supportMsgAmber, supportMsgGreen), 
-          updateDepInfo(depInfoQ1, depInfoQ2, depInfoQ3, depInfoQ4, depInfoQ5), updateDep(index, title, statusMsg, statusColor, true, expanded, supportMsgs, false, toggleThirdParty, depInfo)"
+          updateDep(index, title, statusMsg, statusColor, true, expanded, supportMsgs, false, toggleThirdParty, depInfo)"
           >
           {{ isAdded(index) ? 'Update' : 'Add'}}
         </button>

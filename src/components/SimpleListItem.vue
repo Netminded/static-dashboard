@@ -5,6 +5,9 @@
     import { useOptionsStore } from '@/stores/options'
     import { useDepsStore } from '@/stores/deps'
     import { isInArray } from "@/utilities/utils"
+    import Swal from 'sweetalert2'
+    import  Quill from 'quill'
+    import 'quill/dist/quill.snow.css'
 
     const optionsStore = useOptionsStore()
     const { toggleSupportMsg } = storeToRefs(optionsStore)
@@ -20,6 +23,14 @@
       [DepStatusColors.Amber]: '',
       [DepStatusColors.Green]: '',
       [DepStatusColors.Default]: ''
+    }
+
+    const defaultDepInfo = {
+      q1: '',
+      q2: '',
+      q3: '',
+      q4: '',
+      q5: ''
     }
 
     // If the dependency values exist in the local store update the value
@@ -48,6 +59,10 @@
       return isInArray(index, depsList.value) ? depsList.value[index].thirdPartyItem : false
     }
 
+    const setDepInfo = (index: number) => {
+      return isInArray(index, depsList.value) ? depsList.value[index].depInfo : defaultDepInfo
+    }
+
     //Initialse the dependency values to either a default or what is in the store for persistence on refresh
     const title = ref(setTitle(props.index))
     const statusMsg = ref(setStatusMsg(props.index))
@@ -58,10 +73,79 @@
     const supportMsgAmber = ref(supportMsgs.value.Amber)
     const supportMsgGreen = ref(supportMsgs.value.Green)
     const toggleThirdParty = ref(setThirdPartyToggle(props.index))
+    const depInfo = ref(setDepInfo(props.index))
 
     // Set the active status color status
     const showActive = (statusColor: DepStatusColors, color: DepStatusColors) => {
       return statusColor === color
+    }
+
+    const openEditor = () => {
+      let editor1: Quill, editor2: Quill, editor3: Quill, editor4: Quill, editor5: Quill
+      Swal.fire({
+        title: 'Diagnostic Item Info',
+        html:
+          '<h3>Item Purpose</h3>' +
+          '<div class="q1Editor"></div>' +
+          '<h3>Item Owner</h3>' +
+          '<div class="q2Editor"></div>' +
+          '<h3>Item Source</h3>' +
+          '<div class="q3Editor"></div>' +
+          '<h3>Item History</h3>' +
+          '<div class="q4Editor"></div>' +
+          '<h3>Item Notes</h3>' +
+          '<div class="q5Editor"></div>',
+        showCloseButton: true,
+        showCancelButton: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          editor1 = new Quill('.q1Editor', {
+            theme: 'snow',
+            readOnly: true,
+            modules: {
+                toolbar: false
+            },
+            placeholder: 'What is the purpose of this item? Which stakeholder group or groups is it relevant to?'
+          })
+          if(depInfo.value.q1.length !== 0) editor1.setContents(JSON.parse(depInfo.value.q1))
+          editor2 = new Quill('.q2Editor', {
+            theme: 'snow',
+            readOnly: true,
+            modules: {
+                toolbar: false
+            },
+            placeholder: 'Who is the owner of this item? Who is the technical lead or point of contact for this item?'
+          })
+          if(depInfo.value.q2.length !== 0) editor2.setContents(JSON.parse(depInfo.value.q2))
+          editor3 = new Quill('.q3Editor', {
+            theme: 'snow',
+            readOnly: true,
+            modules: {
+                toolbar: false
+            },
+            placeholder: 'Where does this item come from? Are there any technical integrations, API\'s etc needed to utilise this item?'
+          })
+          if(depInfo.value.q3.length !== 0) editor3.setContents(JSON.parse(depInfo.value.q3))
+          editor4 = new Quill('.q4Editor', {
+            theme: 'snow',
+            readOnly: true,
+            modules: {
+                toolbar: false
+            },
+            placeholder: 'What is the latest version of this item? Have there been previous versions or revisions?'
+          })
+          if(depInfo.value.q4.length !== 0) editor4.setContents(JSON.parse(depInfo.value.q4))
+          editor5 = new Quill('.q5Editor', {
+            theme: 'snow',
+            readOnly: true,
+            modules: {
+                toolbar: false
+            },
+            placeholder: 'Any other information relevant to this item...'
+          })
+          if(depInfo.value.q5.length !== 0) editor5.setContents(JSON.parse(depInfo.value.q5))
+        }
+      })
     }
 </script>
 
@@ -97,6 +181,11 @@
       </div>
       <input type="text" placeholder="Title" required v-model="title" disabled />
       <input name="depStatusMsg" type="text" placeholder="Status Message" required v-model="statusMsg" disabled />
+      <div class="dep-actions">
+        <button class="btn btn-secondary" @click="openEditor">
+          <font-awesome-icon icon="fa-regular fa-file-lines"/>Manage Info
+        </button>
+      </div>
       <div class="support-msg-input-container" v-if="toggleSupportMsg">
         <textarea row="1" type="text" placeholder="Green Status Support Message" v-model="supportMsgGreen" disabled ></textarea>
         <textarea row="1" type="text" placeholder="Amber Status Support Message" v-model="supportMsgAmber" disabled ></textarea>
@@ -240,5 +329,44 @@ h6 {
   font-size: 16px;
   margin-right: 5px;
   transform: scaleX(-1);
+}
+
+.btn {
+  background: #0d6af6;
+  border: 0 solid transparent;
+  border-radius: 50px;
+  box-shadow: 0 4px 16px rgb(32 19 104 / 25%);
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  transition-timing-function: ease-in;
+  transition: 0.5s;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #0c54c0;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 0 solid transparent;
+  color: #0d6af6;
+  padding: 10px 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.btn-secondary:hover {
+  background: transparent;
+  color: #0c54c0;
+}
+
+.fa-file-lines {
+  margin-right: 5px;
 }
 </style>
