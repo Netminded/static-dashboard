@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { ref, onMounted } from "vue"
+    import { ref } from "vue"
     import { DepStatusColors } from "@/types"
     import { storeToRefs } from 'pinia'
     import { useOptionsStore } from '@/stores/options'
@@ -61,7 +61,7 @@
     }
 
     const setDepInfo = (index: number) => {
-      return isInArray(index, depsList.value) ? depsList.value[index].depInfo : defaultDepInfo
+      return isInArray(index, depsList.value) && depsList.value[index].depInfo ? depsList.value[index].depInfo : defaultDepInfo
     }
 
     //Initialse the dependency values to either a default or what is in the store for persistence on refresh
@@ -103,16 +103,16 @@
     const openEditor = () => {
       let editor1: Quill, editor2: Quill, editor3: Quill, editor4: Quill, editor5: Quill
       Swal.fire({
-        title: 'Diagnostic Item Info',
+        title: `Diagnostic Item Info${title.value.length > 0 && `: ${title.value}`}`,
         html:
           '<h3>Item Purpose</h3>' +
-          '<div class="q1Editor"></div>' +
+          '<div class="q1Editor"></div><br/>' +
           '<h3>Item Owner</h3>' +
-          '<div class="q2Editor"></div>' +
+          '<div class="q2Editor"></div><br/>' +
           '<h3>Item Source</h3>' +
-          '<div class="q3Editor"></div>' +
+          '<div class="q3Editor"></div><br/>' +
           '<h3>Item History</h3>' +
-          '<div class="q4Editor"></div>' +
+          '<div class="q4Editor"></div><br/>' +
           '<h3>Item Notes</h3>' +
           '<div class="q5Editor"></div>',
         showCloseButton: true,
@@ -123,7 +123,7 @@
             theme: 'snow',
             placeholder: 'What is the purpose of this item? Which stakeholder group or groups is it relevant to?'
           })
-          if(depInfo.value.q1.length !== 0) editor1.setContents(JSON.parse(depInfo.value.q1))
+          if(depInfo.value && depInfo.value.q1.length !== 0) editor1.setContents(JSON.parse(depInfo.value.q1))
           editor1.on('text-change', () => {
             depInfo.value.q1 = JSON.stringify(editor1.getContents())
           })
@@ -131,7 +131,7 @@
             theme: 'snow',
             placeholder: 'Who is the owner of this item? Who is the technical lead or point of contact for this item?'
           })
-          if(depInfo.value.q2.length !== 0) editor2.setContents(JSON.parse(depInfo.value.q2))
+          if(depInfo.value && depInfo.value.q2.length !== 0) editor2.setContents(JSON.parse(depInfo.value.q2))
           editor2.on('text-change', () => {
             depInfo.value.q2 = JSON.stringify(editor2.getContents())
           })
@@ -139,7 +139,7 @@
             theme: 'snow',
             placeholder: 'Where does this item come from? Are there any technical integrations, API\'s etc needed to utilise this item?'
           })
-          if(depInfo.value.q3.length !== 0) editor3.setContents(JSON.parse(depInfo.value.q3))
+          if(depInfo.value && depInfo.value.q3.length !== 0) editor3.setContents(JSON.parse(depInfo.value.q3))
           editor3.on('text-change', () => {
             depInfo.value.q3 = JSON.stringify(editor3.getContents())
           })
@@ -147,7 +147,7 @@
             theme: 'snow',
             placeholder: 'What is the latest version of this item? Have there been previous versions or revisions?'
           })
-          if(depInfo.value.q4.length !== 0) editor4.setContents(JSON.parse(depInfo.value.q4))
+          if(depInfo.value && depInfo.value.q4.length !== 0) editor4.setContents(JSON.parse(depInfo.value.q4))
           editor4.on('text-change', () => {
             depInfo.value.q4 = JSON.stringify(editor4.getContents())
           })
@@ -155,7 +155,7 @@
             theme: 'snow',
             placeholder: 'Any other information relevant to this item...'
           })
-          if(depInfo.value.q5.length !== 0) editor5.setContents(JSON.parse(depInfo.value.q5))
+          if(depInfo.value && depInfo.value.q5.length !== 0) editor5.setContents(JSON.parse(depInfo.value.q5))
           editor5.on('text-change', () => {
             depInfo.value.q5 = JSON.stringify(editor5.getContents())
           })

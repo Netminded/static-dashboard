@@ -60,7 +60,7 @@
     }
 
     const setDepInfo = (index: number) => {
-      return isInArray(index, depsList.value) ? depsList.value[index].depInfo : defaultDepInfo
+      return isInArray(index, depsList.value) && depsList.value[index].depInfo ? depsList.value[index].depInfo : defaultDepInfo
     }
 
     //Initialse the dependency values to either a default or what is in the store for persistence on refresh
@@ -83,18 +83,18 @@
     const openEditor = () => {
       let editor1: Quill, editor2: Quill, editor3: Quill, editor4: Quill, editor5: Quill
       Swal.fire({
-        title: 'Diagnostic Item Info',
+        title: `Diagnostic Item Info${title.value.length > 0 && `: ${title.value}`}`,
         html:
           '<h3>Item Purpose</h3>' +
-          '<div class="q1Editor"></div>' +
+          '<div class="q1Editor"></div><br/>' +
           '<h3>Item Owner</h3>' +
-          '<div class="q2Editor"></div>' +
+          '<div class="q2Editor"></div><br/>' +
           '<h3>Item Source</h3>' +
-          '<div class="q3Editor"></div>' +
+          '<div class="q3Editor"></div><br/>' +
           '<h3>Item History</h3>' +
-          '<div class="q4Editor"></div>' +
+          '<div class="q4Editor"></div><br/>' +
           '<h3>Item Notes</h3>' +
-          '<div class="q5Editor"></div>',
+          '<div class="q5Editor"></div><br/>',
         showCloseButton: true,
         showCancelButton: false,
         showConfirmButton: false,
@@ -107,7 +107,7 @@
             },
             placeholder: 'What is the purpose of this item? Which stakeholder group or groups is it relevant to?'
           })
-          if(depInfo.value.q1.length !== 0) editor1.setContents(JSON.parse(depInfo.value.q1))
+          if(depInfo.value && depInfo.value.q1.length !== 0) editor1.setContents(JSON.parse(depInfo.value.q1))
           editor2 = new Quill('.q2Editor', {
             theme: 'snow',
             readOnly: true,
@@ -116,7 +116,7 @@
             },
             placeholder: 'Who is the owner of this item? Who is the technical lead or point of contact for this item?'
           })
-          if(depInfo.value.q2.length !== 0) editor2.setContents(JSON.parse(depInfo.value.q2))
+          if(depInfo.value && depInfo.value.q2.length !== 0) editor2.setContents(JSON.parse(depInfo.value.q2))
           editor3 = new Quill('.q3Editor', {
             theme: 'snow',
             readOnly: true,
@@ -125,7 +125,7 @@
             },
             placeholder: 'Where does this item come from? Are there any technical integrations, API\'s etc needed to utilise this item?'
           })
-          if(depInfo.value.q3.length !== 0) editor3.setContents(JSON.parse(depInfo.value.q3))
+          if(depInfo.value && depInfo.value.q3.length !== 0) editor3.setContents(JSON.parse(depInfo.value.q3))
           editor4 = new Quill('.q4Editor', {
             theme: 'snow',
             readOnly: true,
@@ -134,7 +134,7 @@
             },
             placeholder: 'What is the latest version of this item? Have there been previous versions or revisions?'
           })
-          if(depInfo.value.q4.length !== 0) editor4.setContents(JSON.parse(depInfo.value.q4))
+          if(depInfo.value && depInfo.value.q4.length !== 0) editor4.setContents(JSON.parse(depInfo.value.q4))
           editor5 = new Quill('.q5Editor', {
             theme: 'snow',
             readOnly: true,
@@ -143,7 +143,7 @@
             },
             placeholder: 'Any other information relevant to this item...'
           })
-          if(depInfo.value.q5.length !== 0) editor5.setContents(JSON.parse(depInfo.value.q5))
+          if(depInfo.value && depInfo.value.q5.length !== 0) editor5.setContents(JSON.parse(depInfo.value.q5))
         }
       })
     }
