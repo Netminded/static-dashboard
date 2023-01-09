@@ -1,6 +1,8 @@
 export interface Dep {
     id: string,
     title: string,
+    description: string,
+    createdBy: string,
     statusMsg: string,
     statusColor: DepStatusColors,
     added: boolean,

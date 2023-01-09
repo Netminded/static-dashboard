@@ -14,7 +14,6 @@ export default defineConfig({
       google: {
         families: [
           "Roboto",
-          "Nunito Sans",
           {
             name: "Poppins",
             styles: "wght@400;600;700;800",
@@ -28,6 +27,11 @@ export default defineConfig({
           {
             name: "Montserrat",
             styles: "wght@800",
+            defer: true,
+          },
+          {
+            name: "Nunito Sans",
+            styles: "wght@400;500;600",
             defer: true,
           },
         ],

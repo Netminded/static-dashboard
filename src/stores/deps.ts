@@ -14,6 +14,8 @@ export const useDepsStore = defineStore("deps", () => {
     // Default dependency template
     const depsTemplate = {
         title: '',
+        description: '',
+        createdBy: '',
         statusMsg: '',
         statusColor: DepStatusColors.Green,
         added: false,
@@ -71,7 +73,9 @@ export const useDepsStore = defineStore("deps", () => {
     // Merge the dependency id with updated values to edit the dependency
     const updateDep = (
         index: number, 
-        title: string, 
+        title: string,
+        description: string,
+        createdBy: string, 
         statusMsg: string, 
         statusColor: DepStatusColors, 
         added: boolean, 
@@ -80,7 +84,7 @@ export const useDepsStore = defineStore("deps", () => {
         supportExpanded: boolean, 
         thirdPartyItem: boolean,
         depInfo: DepInfo) => {
-        depsList.value[index] = {...depsList.value[index], title, statusMsg, statusColor, added, expanded, supportMsgs, supportExpanded, thirdPartyItem, depInfo}
+        depsList.value[index] = {...depsList.value[index], title, description, createdBy, statusMsg, statusColor, added, expanded, supportMsgs, supportExpanded, thirdPartyItem, depInfo}
     }
 
     const updateDepsList = (deps: Dep[]) => {

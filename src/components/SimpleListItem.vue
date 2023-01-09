@@ -39,6 +39,14 @@
       return isInArray(index, depsList.value) ? depsList.value[index].title : ""
     }
 
+    const setDescription = (index: number) => {
+      return isInArray(index, depsList.value) && depsList.value[index].description ? depsList.value[index].description : ""
+    }
+
+    const setCreatedBy = (index: number) => {
+      return isInArray(index, depsList.value) && depsList.value[index].createdBy ? depsList.value[index].createdBy : ""
+    }
+
     const setStatusMsg = (index: number) => {
       return isInArray(index, depsList.value) ? depsList.value[index].statusMsg : ""
     }
@@ -65,6 +73,8 @@
 
     //Initialse the dependency values to either a default or what is in the store for persistence on refresh
     const title = ref(setTitle(props.index))
+    const description = ref(setDescription(props.index))
+    const createdBy = ref(setCreatedBy(props.index))
     const statusMsg = ref(setStatusMsg(props.index))
     const statusColor = ref(setStatusColor(props.index))
     const expanded = ref(setExpanded(props.index))
@@ -179,8 +189,10 @@
           <p><span v-if="showActive(statusColor, DepStatusColors.Default)" class="active-element"></span>{{ DepStatusColors.Default }}</p>
         </div>
       </div>
-      <input type="text" placeholder="Title" required v-model="title" disabled />
-      <input name="depStatusMsg" type="text" placeholder="Status Message" required v-model="statusMsg" disabled />
+      <input type="text" placeholder="Title" v-model="title" disabled />
+      <input class="dep-created-by-input" name="depCreatedBy" type="text" placeholder="Created By" v-model="createdBy" disabled />
+      <input class="dep-description-input" name="depDescription" type="text" placeholder="Description" v-model="description" disabled />
+      <input name="depStatusMsg" type="text" placeholder="Status Message" v-model="statusMsg" disabled />
       <div class="dep-actions">
         <button class="btn btn-secondary" @click="openEditor">
           <font-awesome-icon icon="fa-regular fa-file-lines"/>Manage Info

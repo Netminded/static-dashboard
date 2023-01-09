@@ -40,6 +40,14 @@
       return isInArray(index, depsList.value) ? depsList.value[index].title : ""
     }
 
+    const setDescription = (index: number) => {
+      return isInArray(index, depsList.value) && depsList.value[index].description ? depsList.value[index].description : ""
+    }
+
+    const setCreatedBy = (index: number) => {
+      return isInArray(index, depsList.value) && depsList.value[index].createdBy ? depsList.value[index].createdBy : ""
+    }
+
     const setStatusMsg = (index: number) => {
       return isInArray(index, depsList.value) ? depsList.value[index].statusMsg : ""
     }
@@ -66,6 +74,8 @@
 
     //Initialse the dependency values to either a default or what is in the store for persistence on refresh
     const title = ref(setTitle(props.index))
+    const description = ref(setDescription(props.index))
+    const createdBy = ref(setCreatedBy(props.index))
     const statusMsg = ref(setStatusMsg(props.index))
     const statusColor = ref(setStatusColor(props.index))
     const expanded = ref(setExpanded(props.index))
@@ -196,7 +206,10 @@
         </div>
       </div>
       <input type="text" placeholder="Title" required v-model="title" />
-      <input class="dep-status-input" name="depStatusMsg" type="text" placeholder="Status Message" required v-model="statusMsg" />
+      <input class="dep-created-by-input" name="depCreatedBy" type="text" placeholder="Created By" v-model="createdBy" />
+      <input class="dep-description-input" name="depDescription" type="text" placeholder="Description" v-model="description" />
+      <p class="char-text">{{ 60 - description.length }}/60</p>
+      <input class="dep-status-input" name="depStatusMsg" type="text" placeholder="Status Message" v-model="statusMsg" />
       <p class="char-text">{{ 60 - statusMsg.length }}/60</p>
       <div class="dep-actions">
         <button class="btn btn-secondary" @click="openEditor">
@@ -219,9 +232,9 @@
         <button
           type="button"
           class="btn"
-          :disabled="statusMsg.length > 60 || title.length <= 0"
+          :disabled="description.length > 60 || statusMsg.length > 60 || title.length <= 0"
           @click="expanded = !expanded, updateSupport(supportMsgRed, supportMsgAmber, supportMsgGreen), 
-          updateDep(index, title, statusMsg, statusColor, true, expanded, supportMsgs, false, toggleThirdParty, depInfo)"
+          updateDep(index, title, description, createdBy, statusMsg, statusColor, true, expanded, supportMsgs, false, toggleThirdParty, depInfo)"
           >
           {{ isAdded(index) ? 'Update' : 'Add'}}
         </button>
@@ -291,8 +304,12 @@ h6 {
 .dep-list-item-body input::placeholder, .dep-list-item-body textarea::placeholder {
   color: #0c0c0c;
 }
-.dep-status-input {
+.dep-description-input, .dep-status-input {
   padding-right: 50px !important;
+}
+
+.dep-status-input {
+  margin-top: 10px;
 }
 
 .dep-list-item-body .char-text {
