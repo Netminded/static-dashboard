@@ -18,6 +18,11 @@
         timestamp: number
     }>()
 
+    const removeDep = (event: Event,userId: string, role: number, teamId: string, id: string) => {
+        event.stopPropagation()
+        removeSavedDep(userId, role, teamId, id)
+    }
+
     const getDate = () => {
         const date = new Date(props.timestamp)
         return `${date.getUTCDay() + 1}/${date.getUTCMonth() + 1}/${date.getUTCFullYear()}`
@@ -37,7 +42,7 @@
         <div class="dep-thumbnail-card--body-actions">
             <router-link :to="`/design/${id}/view`" class="dep-thumbnail-card--body-action"><font-awesome-icon icon="fa-solid fa-diagram-next" /> View</router-link>
             <router-link :to="`/design/${id}/edit`" class="dep-thumbnail-card--body-action"><font-awesome-icon icon="fa-regular fa-pen-to-square" /> Edit</router-link>
-            <a href="javascript:void(0)" class="dep-thumbnail-card--body-action" @click="removeSavedDep(userId, role, teamId, id)"><font-awesome-icon icon="fa-regular fa-trash-can" /> Delete</a>
+            <a href="javascript:void(0)" class="dep-thumbnail-card--body-action" @click="(event) => removeDep(event, userId, role, teamId, id)"><font-awesome-icon icon="fa-regular fa-trash-can" /> Delete</a>
         </div>
     </div>
 </template>
