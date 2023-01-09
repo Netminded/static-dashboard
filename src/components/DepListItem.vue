@@ -18,7 +18,7 @@
         timestamp: number
     }>()
 
-    const removeDep = (event: Event,userId: string, role: number, teamId: string, id: string) => {
+    const removeDep = (event: Event, userId: string | null | undefined, role: number | null | undefined, teamId: string | null | undefined, id: string) => {
         event.stopPropagation()
         removeSavedDep(userId, role, teamId, id)
     }
