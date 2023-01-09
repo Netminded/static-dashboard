@@ -65,7 +65,7 @@
                         <span class="tile-down" v-else>⌄</span>
                     </span>
                 </button>
-                <p :class="[isThumbnailPreview ? 'support-msg-text-thumbnail' : 'support-msg-text']" v-if="expanded">{{ truncateTxt(supportMsg, 250) }}</p>
+                <p :class="[isThumbnailPreview ? 'support-msg-text-thumbnail' : 'support-msg-text']" v-if="expanded" :style="[themeOption === Themes.NetMinded ? {'color': '#4c4d55'} : {'color': '#fff'}]">{{ truncateTxt(supportMsg, 250) }}</p>
             </div>
         </template>
     </div>
