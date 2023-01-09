@@ -167,6 +167,9 @@
     font-weight: 800;
     padding-top: 3%;
     font-size: 26%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .tile-header-thumbnail .fa-share-from-square {
@@ -345,6 +348,10 @@
     color: #4c4d55;
 }
 
+.tile-thumbnail .support-msg-container {
+    margin-top: -10px;
+}
+
 .support-button {
     border: 0 solid transparent;
     border-radius: 50px;
@@ -367,9 +374,9 @@
     box-shadow: 0 4px 7% rgb(32 19 104 / 25%);
     color: #fff;
     font-family: "Poppins", sans-serif;
-    font-size: 40%;
+    font-size: 20%;
     font-weight: 600;
-    padding: 5% 10%;
+    padding: 3% 5%;
     text-transform: uppercase;
     transition-timing-function: ease-in;
     transition: 0.5s;
@@ -387,10 +394,18 @@
     top: 3px;
 }
 
+.support-button-thumbnail .tile-up {
+    top: 0.5px
+}
+
 .tile-down {
     position: relative;
     left: 2px;
     bottom: 3px;
+}
+
+.support-button-thumbnail .tile-down {
+    bottom: 1px
 }
 
 .support-msg-text {
@@ -398,7 +413,7 @@
 }
 
 .support-msg-text-thumbnail {
-    font-size: 45%;
+    font-size: 25%;
     padding: 0 7% 7% 7%;
 }
 </style>
