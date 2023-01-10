@@ -1,6 +1,6 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
-import { auth, provider, database } from "../firebase/firebaseConfig"
+import { auth, provider, database, logAnalyticsEvent, setUserAnalyticsProperty } from "../firebase/firebaseConfig"
 import { signInWithEmailAndPassword, sendPasswordResetEmail, verifyPasswordResetCode, confirmPasswordReset, signOut } from "@firebase/auth"
 import { ref as fbRef, onValue} from "firebase/database";
 import { validateEmail, getFirstName } from "@/utilities/utils"
@@ -87,6 +87,8 @@ export const useUsersStore = defineStore("users", () => {
         const fbUser = response.user
         setUser({uid: fbUser.uid})
         setLoggedIn(true)
+        logAnalyticsEvent('login')
+        if(teamName.value) setUserAnalyticsProperty({ team_name: teamName.value})
         // validateEmail(response.user.email) ? (setLoggedIn(true), setUser({displayName: fbUser.displayName, photoURL: fbUser.photoURL, uid: fbUser.uid})) : await setLogOut()
       } else {
         console.log('Error signing in!')

@@ -3,6 +3,7 @@
     import { storeToRefs } from 'pinia'
     import { useDepsStore } from '@/stores/deps'
     import { useUsersStore } from '@/stores/users'
+    import { logAnalyticsEvent } from '@/firebase/firebaseConfig'
 
     const usersStore = useUsersStore()
     const { userId, teamId, role } = storeToRefs(usersStore)
@@ -21,12 +22,14 @@
         if(userId.value && role.value && teamId.value && depName.value.trim().length > 0) {
             saveDepToDb(userId.value, role.value, teamId.value, depName.value, JSON.stringify(depsList.value))
         }
+        logAnalyticsEvent('save_chain')
     }
 
     const updateDep = () => {
         if(userId.value && role.value && teamId.value && props.chainId && depName.value.trim().length > 0) {
             updateDepInDb(userId.value, role.value, teamId.value, props.chainId as string, depName.value, JSON.stringify(depsList.value))
         }
+        logAnalyticsEvent('update_chain')
     }
 
 </script>

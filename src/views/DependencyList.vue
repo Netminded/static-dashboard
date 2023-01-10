@@ -7,6 +7,7 @@
     import { storeToRefs } from 'pinia'
     import { useDepsStore } from '@/stores/deps'
     import type { Dep } from '@/types'
+    import { logAnalyticsEvent } from '@/firebase/firebaseConfig'
 
     const depsStore = useDepsStore()
     const { allDepsList, getSliceOfDeps } = storeToRefs(depsStore)
@@ -34,7 +35,7 @@
     <main>
         <div class="list-header">
             <h1>Diagnostic Chains</h1>
-            <router-link class="btn" to="/design">Design Chain</router-link>
+            <router-link class="btn" @click="logAnalyticsEvent('create_chain')" to="/design">Design Chain</router-link>
         </div>
         <div class="dep-list-content">
             <div v-if="allDepsList.length > 0" class="grid">
