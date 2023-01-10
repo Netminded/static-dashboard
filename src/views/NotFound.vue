@@ -18,7 +18,7 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        height: calc(100vh - 135px);
+        height: calc(100vh - 115px);
         width: 100%;
         background: url('../assets/NetMinded_Hero_Bk.svg') 50% 40% no-repeat, linear-gradient(108.69deg, #092842 13.22%, #0C0527 86.57%);
         background-size: cover;

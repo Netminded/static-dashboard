@@ -35,6 +35,9 @@ export const useUsersStore = defineStore("users", () => {
   // Get a users team id
   const teamId = computed(() => user.value.data?.team?.team_id)
 
+  // Get a users team name
+  const teamName = computed(() => user.value.data?.team?.team_name)
+
   // Get a users role
   const role = computed(() => user.value.data?.team?.role)
 
@@ -141,5 +144,5 @@ export const useUsersStore = defineStore("users", () => {
     fbUser ? setUser({uid: fbUser.uid}) : setUser(null)
   }
 
-  return { user, fullName, userId, teamId, role, setUser, fetchUser, setSignIn, setResetPassword, fetchResetCode, setNewPassword, setLogOut }
+  return { user, fullName, userId, teamId, teamName, role, setUser, fetchUser, setSignIn, setResetPassword, fetchResetCode, setNewPassword, setLogOut }
 })

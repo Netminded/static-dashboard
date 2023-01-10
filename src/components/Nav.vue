@@ -4,7 +4,7 @@
   import { useRouter, RouterLink } from "vue-router"
 
   const usersStore = useUsersStore()
-  const { user, fullName } = storeToRefs(usersStore)
+  const { user, fullName, teamName } = storeToRefs(usersStore)
   const router = useRouter()
   const { setLogOut } = usersStore
 
@@ -28,10 +28,15 @@
     />
     <router-link class="nav-link" v-if="user.loggedIn" to="/">Diagnostic Chains</router-link>
     </div>
-    <div>
-      <p v-if="fullName" class="user-name">{{fullName}}</p>
-      <span v-if="user.loggedIn" class="ver-divider"></span>
-      <a href="#" v-if="user.loggedIn" @click.prevent="signOut"><font-awesome-icon icon="fa-solid fa-arrow-right-from-bracket" />Logout</a>
+    <div v-if="user.loggedIn">
+      <div>
+        <p v-if="fullName" class="user-name">{{ fullName }}</p>
+        <p v-if="teamName" class="team-name"><font-awesome-icon icon="fa-regular fa-id-badge" /> {{ teamName }}</p>
+      </div>
+      <div>
+        <span class="ver-divider"></span>
+        <a href="#" @click.prevent="signOut"><font-awesome-icon icon="fa-solid fa-arrow-right-from-bracket" />Logout</a>
+      </div>
     </div>
   </nav>
 </template>
@@ -41,7 +46,7 @@ nav {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 20px;
+  padding: 10px 20px;
   background: linear-gradient(108.69deg, #092842 13.22%, #0c0527 86.57%)
     no-repeat;
     z-index: 1;
@@ -55,37 +60,33 @@ nav {
 
 .nav-link {
   position: relative;
-  top: -7px;
+  top: -6px;
   margin-left: 30px;
+}
+
+nav div:nth-child(2) {
+  display: flex;
+  justify-content: space-between;
 }
 
 .user-name {
   color: #FFFFFF;
   font-family: "Poppins", sans-serif;
-  display: inline-block;
   font-weight: 600;
+  font-size: 12px;
   padding-right: 15px;
-  position: relative;
-  top: 1px;
 }
 
-.user-img {
-  display: inline-block;
-  width: 32px;
-  height: 32px;
-  margin-right: 8px;
+.fa-id-badge {
+  margin-right: 2px;
 }
 
-@media screen and (max-width: 360px) {
-  .user-img {
-    display: none;
-  }
-}
-
-.user-img img {
-  width: 100%;
-  border-radius: 50%;
-  margin-bottom: -15px;
+.team-name {
+  color: #b2b2b2;
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  padding-right: 15px;
 }
 
 .ver-divider {
@@ -94,7 +95,7 @@ nav {
   display: inline-block;
   background: #6d55f7;
   position: relative;
-  top: 6px;
+  top: 8px;
 }
 
 nav a {
@@ -107,7 +108,7 @@ nav a {
   padding: 5px;
   margin-left: 10px;
   position: relative;
-  top: 1px;
+  top: 3px;
 }
 
 nav .fa-arrow-right-from-bracket {

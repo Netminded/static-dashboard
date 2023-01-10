@@ -60,7 +60,7 @@
 <style>
 
     main {
-        height: calc(100vh - 135px);
+        height: calc(100vh - 115px);
     }
 
     .list-header {
